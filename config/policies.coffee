@@ -3,6 +3,6 @@ module.exports =
     PortfolioController:
       '*': false
       find: ['isAuth']
-      create: ['isAuth']
+      create: ['isAuth', 'setCreatedBy']
       update: ['isAuth', 'isOwner']
       destroy: ['isAuth', 'isOwner']

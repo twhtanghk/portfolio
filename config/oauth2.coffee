@@ -1,6 +1,4 @@
+{oauth2} = require 'activerecord-model'
+
 module.exports =
-  oauth2:
-    verifyUrl: 'https://abc.com/auth/oauth2/verify/'
-    scope: [
-      'User'
-    ]
+  oauth2: oauth2
