@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo
+    ports:
+      - 27017
+    volumes:
+      - ./data:/data/db
+    command: mongod --directoryperdb
+    env_file:
+      ../.env
+
+  portfolio:
+    depends_on:
+      - mongo
+    image: twhtanghk/portfolio
+    ports:
+      - 1337
+    env_file:
+      ../.env
+      ./.env
