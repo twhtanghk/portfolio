@@ -5,7 +5,7 @@ ADD . $APP
 
 WORKDIR $APP
 
-RUN npm install \
+RUN npm install
 
 EXPOSE 1337
 

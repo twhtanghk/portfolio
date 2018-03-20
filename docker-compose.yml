@@ -9,7 +9,7 @@ services:
       - ./data:/data/db
     command: mongod --directoryperdb
     env_file:
-      ../.env
+      - ../.env
 
   portfolio:
     depends_on:
@@ -18,5 +18,5 @@ services:
     ports:
       - 1337
     env_file:
-      ../.env
-      ./.env
+      - ../.env
+      - ./.env
