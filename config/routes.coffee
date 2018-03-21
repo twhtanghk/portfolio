@@ -1,5 +1,8 @@
 module.exports =
   routes:
+    'GET /api/portfolio/tags':
+      controller: 'PortfolioController'
+      action: 'tags'
     'GET /api/portfolio':
       controller: 'PortfolioController'
       action: 'find'

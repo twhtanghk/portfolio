@@ -56,3 +56,10 @@ describe 'Portfolio Controller', ->
       .set 'Authorization', "Bearer #{token}"
       .set 'Content-Type', 'application/json'
       .expect 200
+
+  it 'tags', ->
+    req sails.hooks.http.app
+      .get '/api/portfolio/tags'
+      .set 'Authorization', "Bearer #{token}"
+      .set 'Content-Type', 'application/json'
+      .expect 200
