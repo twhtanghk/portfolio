@@ -27,6 +27,10 @@ create = (data) ->
     .send data
 
 class CSV extends stream.Transform
+  constructor: (opts) ->
+    super opts
+    @tag = opts.tag
+
   _transform: (chunk, encoding, cb) ->
     fields = [
       'Symbol'
@@ -46,6 +50,7 @@ class CSV extends stream.Transform
       quantity: chunk['Shares']
       price: chunk['Price']
       notes: chunk['Notes']
+      tags: [@tag]
     create data
       .then ->
         cb()
@@ -58,7 +63,7 @@ lift = ->
     .promisifyAll require 'sails'
     .liftAsync config
   
-convert = ->
+convert = (tag) ->
   new Promise (resolve, reject) ->
     process.stdin
       .on 'error', reject
@@ -66,11 +71,15 @@ convert = ->
       .pipe new Parser columns: true
       .on 'error', reject
       .pipe new CSV
+        tag: tag
         readableObjectMode: true
         writableObjectMode: true
       .on 'error', reject
 
+tag = process.argv[2]
+
 lift()
   .then getToken
-  .then convert
+  .then ->
+    convert tag
   .catch console.error

@@ -20,3 +20,5 @@ module.exports =
     createdBy:
       model: 'user'
       required: true
+    tags:
+      type: 'array'
