@@ -15,7 +15,7 @@
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js",
+    "start": "node app.js --prod",
     "test": "NODE_ENV=production mocha test/bootstrap.coffee test/unit/*.coffee"
   },
   "main": "app.js",
