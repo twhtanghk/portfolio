@@ -41,6 +41,13 @@ describe 'Portfolio Controller', ->
       .set 'Content-Type', 'application/json'
       .expect 200
 
+  it 'count', ->
+    req sails.hooks.http.app
+      .get '/api/portfolio/count'
+      .set 'Authorization', "Bearer #{token}"
+      .set 'Content-Type', 'application/json'
+      .expect 200
+
   it 'update', ->
     req sails.hooks.http.app
       .put "/api/portfolio/#{id}"

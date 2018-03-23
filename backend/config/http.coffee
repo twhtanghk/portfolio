@@ -4,6 +4,7 @@ module.exports =
       order: [
         'bodyParser'
         'compress'
+        'methodOverride'
         'router'
         'www'
         'favicon'

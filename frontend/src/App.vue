@@ -39,10 +39,19 @@ module.exports =
       { key: 'tags', sortable: true }
     ]
   mounted: ->
-    @$refs.portfolio.list()
-      .then (res) =>
-        @collection = _.map res, (item) ->
+    gen = await @$refs.portfolio.listAll
+      data:
+        sort:
+          tags: 1
+          date: 1
+    do =>
+      {next} = gen()
+      while true
+        {done, value} = await next @collection.length
+        break if done
+        value = value.map (item) ->
           item.total = item.quantity * item.price
           item
-      .catch console.error
+        for i in value
+          @collection.push i
 </script>
