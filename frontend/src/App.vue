@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
-    <model ref='portfolio' :eventBus='eventBus' baseUrl='http://172.23.0.3:1337/api/portfolio' />
+    <model ref='portfolio' :eventBus='eventBus' baseUrl='http://172.22.0.3:1337/api/portfolio' />
     <b-table striped hover :items='collection' :fields='fields' />
   </div>
 </template>
@@ -15,9 +15,13 @@ eventBus = require('vue.oauth2/src/eventBus').default
 
 format =
   date: (data) ->
-    new Date(data).toLocaleDateString()
+    if data?
+      return new Date(data).toLocaleDateString()
+    return null
   float: (data) ->
-    data.toFixed 2
+    if data?
+      return data.toFixed 2
+    return null
 
 module.exports =
   data: ->
@@ -39,18 +43,22 @@ module.exports =
       { key: 'tags', sortable: true }
     ]
   mounted: ->
-    gen = await @$refs.portfolio.listAll
+    opts =
       data:
+        type: 
+          '!': null
         sort:
           tags: 1
           date: 1
     do =>
+      gen = await @$refs.portfolio.listAll opts
       {next} = gen()
       while true
         {done, value} = await next @collection.length
         break if done
         value = value.map (item) ->
-          item.total = item.quantity * item.price
+          if item.quantity? and item.price?
+            item.total = item.quantity * item.price
           item
         for i in value
           @collection.push i
