@@ -2,11 +2,21 @@
   <div id="app">
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
     <model ref='portfolio' :eventBus='eventBus' baseUrl='http://172.22.0.3:1337/api/portfolio' />
-    <b-table striped hover :items='collection' :fields='fields' />
+    <b-container>
+      <b-row>
+        <b-col>
+          <portfolio :collection='collection' />
+        </b-col>
+        <b-col>
+          <onhold :collection='collection' />
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
 <script lang='coffee'>
+d3 = require 'd3'
 Vue = require('vue').default
 Vue.use require('bootstrap-vue').default
 Vue.use require('vue.oauth2/src/plugin').default
@@ -15,15 +25,14 @@ eventBus = require('vue.oauth2/src/eventBus').default
 
 format =
   date: (data) ->
-    if data?
-      return new Date(data).toLocaleDateString()
-    return null
+    new Date(data).toLocaleDateString()
   float: (data) ->
-    if data?
-      return data.toFixed 2
-    return null
+    data.toFixed 2
 
 module.exports =
+  components:
+    portfolio: require('./portfolio').default
+    onhold: require('./onhold').default
   data: ->
     oauth2:
       url: 'https://app.ogcio.gov.hk/auth/oauth2/authorize/'
@@ -32,34 +41,22 @@ module.exports =
       response_type: 'token'
     eventBus: eventBus
     collection: []
-    fields: [
-      { key: 'symbol', sortable: true }
-      { key: 'name', sortable: true }
-      { key: 'type', sortable: false }
-      { key: 'date', sortable: true, formatter: format.date }
-      { key: 'quantity', sortable: true }
-      { key: 'price', sortable: false }
-      { key: 'total', sortable: true, formatter: format.float }
-      { key: 'tags', sortable: true }
-    ]
   mounted: ->
-    opts =
+    gen = await @$refs.portfolio.listAll
       data:
-        type: 
+        type:
           '!': null
+        tags:
+          contains: 'cheung'
         sort:
-          tags: 1
+          symbol: 1
           date: 1
+          tags: 1
     do =>
-      gen = await @$refs.portfolio.listAll opts
       {next} = gen()
       while true
         {done, value} = await next @collection.length
         break if done
-        value = value.map (item) ->
-          if item.quantity? and item.price?
-            item.total = item.quantity * item.price
-          item
         for i in value
           @collection.push i
 </script>
