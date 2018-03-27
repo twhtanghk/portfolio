@@ -70,3 +70,10 @@ describe 'Portfolio Controller', ->
       .set 'Authorization', "Bearer #{token}"
       .set 'Content-Type', 'application/json'
       .expect 200
+
+  it 'onhold', ->
+    req sails.hooks.http.app
+      .get '/api/portfolio/onhold'
+      .set 'Authorization', "Bearer #{token}"
+      .set 'Content-Type', 'application/json'
+      .expect 200
