@@ -19,6 +19,7 @@
     "d3": "^5.0.0",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.7",
+    "vue-multiselect": "^2.1.0",
     "vue-template-compiler": "^2.5.13",
     "vue.model": "https://github.com/twhtanghk/vue.model",
     "vue.oauth2": "https://github.com/twhtanghk/vue.oauth2"
