@@ -3,6 +3,9 @@ module.exports =
     'GET /api/portfolio/count':
       controller: 'PortfolioController'
       action: 'count'
+    'GET /api/portfolio/onhold':
+      controller: 'PortfolioController'
+      action: 'findOnHold'
     'GET /api/portfolio/tags':
       controller: 'PortfolioController'
       action: 'tags'
