@@ -1,8 +1,13 @@
 <template>
-  <b-table striped hover :items='list' :fields='fields' />
+  <b-table striped hover :items='list' :fields='fields'>
+    <template slot='symbol' slot-scope='data'>
+      <quote :symbol='data.value' />
+    </template>
+  </b-table>
 </template>
 
 <script lang='coffee'>
+_ = require 'lodash'
 d3 = require 'd3'
 Vue = require('vue').default
 Vue.use require('bootstrap-vue').default
@@ -10,6 +15,8 @@ Vue.use require('bootstrap-vue').default
 format = require('./format').default
 
 module.exports =
+  components:
+    quote: require('./quote').default
   props: [
     'collection'
   ]
@@ -18,24 +25,18 @@ module.exports =
       { key: 'symbol', sortable: true }
       { key: 'name', sortable: true }
       { key: 'quantity', sortable: true }
-      { key: 'price', sortable: false }
+      { key: 'price', sortable: false, formatter: format.float }
+      { key: 'marketPrice', sortable: false }
       { key: 'total', sortable: true, formatter: format.float }
-      { key: 'tags', sortable: true }
+      { key: 'change', sortable: true, formatter: format.float }
+      { key: 'percent', sortable: true, formatter: format.float }
     ]
   computed:
     list: ->
-      ret = d3
-        .nest()
-        .key (item) ->
-          item.symbol
-        .rollup (collection) ->
-          name: collection[0].name
-          quantity: d3.sum collection, (item) ->
-            if item.type == 'Sell' then -item.quantity else item.quantity
-          tags: collection[0].tags
-        .entries @collection
-        .map (item) ->
-          item.value.symbol = item.key
-          item.value
-      return ret
+      @collection.map (item) ->
+        diff =  (item.marketPrice * item.quantity) - item.price
+        _.extend item,
+          total: item.quantity * item.marketPrice
+          change: diff
+          percent: (diff / item.price) * 100
 </script>
