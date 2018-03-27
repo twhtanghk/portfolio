@@ -2,8 +2,9 @@ module.exports =
   policies:
     PortfolioController:
       '*': false
-      count: ['isAuth']
-      tags: ['isAuth']
+      count: ['isAuth', 'isOwner']
+      findOnHold: ['isAuth', 'isOwner']
+      tags: ['isAuth', 'isOwner']
       find: ['isAuth', 'isOwner']
       create: ['isAuth', 'setCreatedBy']
       update: ['isAuth', 'isOwner']
