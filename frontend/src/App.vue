@@ -52,5 +52,4 @@ module.exports =
       .then (res) =>
         for i in res
           @tags.push i
-          @selected.push i
 </script>
