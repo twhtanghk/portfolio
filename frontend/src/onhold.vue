@@ -5,6 +5,9 @@
       <template slot='symbol' slot-scope='data'>
         <quote :symbol='data.value' />
       </template>
+      <template slot='bottom-row' slot-scope='data'>
+        <div>{{total}}</div>
+      </template>
     </b-table>
   </div>
 </template>
@@ -36,19 +39,36 @@ module.exports =
       { key: 'change', sortable: true, formatter: format.float }
       { key: 'percent', sortable: true, formatter: format.float }
     ]
-    list: []
-  mounted: ->
-    opts =
-      or: @tags.map (tag) ->
-        tags:
-          contains: tag
-    @$refs.onhold
-      .list opts
-      .then (collection) =>
-        collection.map (item) =>
-          diff =  (item.marketPrice * item.quantity) - item.price
-          @list.push _.extend item,
-            total: item.quantity * item.marketPrice
-            change: diff
-            percent: (diff / item.price) * 100
+  methods:
+    format: (item) ->
+      diff =  (item.marketPrice * item.quantity) - item.price
+      _.extend item,
+         total: item.quantity * item.marketPrice
+         change: diff
+         percent: (diff / item.price) * 100
+  computed:
+    opts: ->
+      ret =
+        data:
+          type:
+            '!': null
+      if @tags.length != 0
+        ret.data.or = @tags?.map (tag) ->
+          tags:
+            contains: tag
+      ret
+    total: ->
+      ret = 0
+      @list?.map (item) ->
+        ret += item.total
+      ret
+  asyncComputed:
+    list: ->
+      ret = []
+      opts = @opts
+      @$refs.onhold?.list opts
+        .then (res) =>
+          res.map (item) =>
+            ret.push @format item
+          ret
 </script>

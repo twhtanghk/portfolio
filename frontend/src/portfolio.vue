@@ -3,7 +3,7 @@
     <model ref='portfolio' :eventBus='eventBus' baseUrl='http://172.23.0.3:1337/api/portfolio' />
     <b-table striped hover :items='list' :fields='fields'>
       <template slot='symbol' slot-scope='data'>
-        <quote :symbol='data.value'
+        <quote :symbol='data.value' />
       </template>
     </b-table>
   </div>
@@ -16,6 +16,8 @@ Vue.use require('bootstrap-vue').default
 format = require('./format').default
 
 module.exports =
+  components:
+    quote: require('./quote').default
   props: [
     'tags'
   ]
@@ -31,21 +33,36 @@ module.exports =
       { key: 'total', sortable: true, formatter: format.float }
       { key: 'tags', sortable: true }
     ]
-    list: []
-  mounted: ->
-    gen = await @$refs.portfolio.listAll
-      data:
-        type:
-          '!': null
-        sort:
-          symbol: 1
-          date: 1
-          tags: 1
-    do =>
-      {next} = gen()
-      while true
-        {done, value} = await next @list.length
-        break if done
-        for i in value
-          @list.push i
+  methods:
+    format: (item) ->
+      _.extend item, total: item.quantity * item.price
+  computed:
+    opts: ->
+      ret = 
+        data:
+          type:
+            '!': null
+          sort:
+            symbol: 1
+            date: 1
+            tags: 1
+      if @tags.length != 0
+        ret.data.or = @tags?.map (tag) ->
+          tags:
+            contains: tag
+      ret
+  asyncComputed:
+    list: ->
+      ret = []
+      opts = @opts
+      gen = await @$refs.portfolio?.listAll opts
+      if gen?
+        do =>
+          {next} = gen()
+          while true
+            {done, value} = await next ret.length
+            break if done
+            for i in value
+              ret.push @format i
+      ret
 </script>
