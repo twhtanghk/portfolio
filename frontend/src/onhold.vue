@@ -6,7 +6,9 @@
         <quote :symbol='data.value' />
       </template>
       <template slot='bottom-row' slot-scope='data'>
-        <div>{{total}}</div>
+        <td colspan='8'>
+          Total: {{sum.total}} Change: {{sum.diffTotal}} Percent: {{sum.percent}}
+        </td>
       </template>
     </b-table>
   </div>
@@ -57,11 +59,15 @@ module.exports =
           tags:
             contains: tag
       ret
-    total: ->
-      ret = 0
+    sum: ->
+      ret =
+        total: 0
+        diffTotal: 0
+        percent: 0
       @list?.map (item) ->
-        ret += item.total
-      ret
+        ret.total += item.total
+        ret.diffTotal += item.change
+      _.extend ret, percent: if ret.total != 0 then ret.diffTotal / ret.total else 0
   asyncComputed:
     list: ->
       ret = []
