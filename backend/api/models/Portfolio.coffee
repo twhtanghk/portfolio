@@ -28,12 +28,14 @@ module.exports =
       required: true
     tags:
       type: 'array'
+    isSell: ->
+      /^sell$/i.test @type
   findOnHold: (cond) ->
     @find()
       .where cond
       .then (collection) ->
         quantity = (item) ->
-          if /^sell$/i.test item.type then -item.quantity else item.quantity
+          if item.isSell() then -item.quantity else item.quantity
         d3
           .nest()
           .key (item) ->
@@ -43,6 +45,8 @@ module.exports =
             quantity: d3.sum group, quantity
             price: d3.sum group, (item) ->
               quantity(item) * item.price
+            maxPrice: d3.max group, (item) ->
+              if item.isSell() then 0 else item.price
           .entries collection
           .map (item) ->
             item.value.symbol = item.key
