@@ -6,7 +6,7 @@
         <quote :symbol='data.value' />
       </template>
       <template slot='bottom-row' slot-scope='data'>
-        <td colspan='8'>
+        <td :colspan='11'>
           Total: {{sum.total}} Change: {{sum.diffTotal}} Percent: {{sum.percent}}
         </td>
       </template>
@@ -35,7 +35,10 @@ module.exports =
       { key: 'symbol', sortable: true }
       { key: 'name', sortable: true }
       { key: 'quantity', sortable: true }
+      { key: 'cost', sortable: false, formatter: format.float }
       { key: 'price', sortable: false, formatter: format.float }
+      { key: 'maxPrice', sortable: false, formatter: format.float }
+      { key: 'avgPrice', sortable: false, formatter: format.float }
       { key: 'marketPrice', sortable: false }
       { key: 'total', sortable: true, formatter: format.float }
       { key: 'change', sortable: true, formatter: format.float }
@@ -43,11 +46,16 @@ module.exports =
     ]
   methods:
     format: (item) ->
-      diff =  (item.marketPrice * item.quantity) - item.price
+      avgPrice = item.price / item.quantity
+      cost =  avgPrice * item.quantity
+      curr = item.marketPrice * item.quantity
+      diff = curr - cost
       _.extend item,
-         total: item.quantity * item.marketPrice
+         cost: cost
+         total: curr
          change: diff
-         percent: (diff / item.price) * 100
+         percent: (diff / cost) * 100
+         avgPrice: avgPrice
   computed:
     opts: ->
       ret =
@@ -70,11 +78,9 @@ module.exports =
       _.extend ret, percent: if ret.total != 0 then ret.diffTotal / ret.total else 0
   asyncComputed:
     list: ->
-      ret = []
       opts = @opts
       @$refs.onhold?.list opts
         .then (res) =>
           res.map (item) =>
-            ret.push @format item
-          ret
+            @format item
 </script>
