@@ -1,6 +1,6 @@
 <template>
   <div>
-    <model ref='portfolio' :eventBus='eventBus' baseUrl='http://172.23.0.3:1337/api/portfolio' />
+    <model ref='portfolio' :eventBus='eventBus' baseUrl='http://172.22.0.3:1337/api/portfolio' />
     <b-table striped hover :items='list' :fields='fields'>
       <template slot='symbol' slot-scope='data'>
         <quote :symbol='data.value' />
@@ -57,12 +57,11 @@ module.exports =
       opts = @opts
       gen = await @$refs.portfolio?.listAll opts
       if gen?
-        do =>
-          {next} = gen()
-          while true
-            {done, value} = await next ret.length
-            break if done
-            for i in value
-              ret.push @format i
+        {next} = gen()
+        while true
+          {done, value} = await next ret.length
+          break if done
+          for i in value
+            ret.push @format i
       ret
 </script>

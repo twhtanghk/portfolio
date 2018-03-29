@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
-    <model ref='portfolio' :eventBus='eventBus' baseUrl='http://172.23.0.3:1337/api/portfolio' />
+    <model ref='portfolio' :eventBus='eventBus' baseUrl='http://172.22.0.3:1337/api/portfolio' />
     <b-container>
       <b-row>
         <b-col>
