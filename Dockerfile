@@ -5,7 +5,8 @@ ADD . $APP
 
 WORKDIR $APP
 
-RUN npm install
+RUN (cd backend && yarn install) \
+&&  (cd frontend && yarn install)
 
 EXPOSE 1337
 
