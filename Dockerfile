@@ -6,8 +6,8 @@ ADD . $APP
 WORKDIR $APP
 
 RUN (cd backend && yarn install) \
-&&  (cd frontend && yarn install && yarn run build)
+&& (cd frontend && yarn install)
 
 EXPOSE 1337
 
-ENTRYPOINT ['npm', 'start']
+ENTRYPOINT "$APP/entrypoint.sh"
