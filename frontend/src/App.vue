@@ -34,8 +34,8 @@ module.exports =
     mselect: require('vue-multiselect').default
   data: ->
     oauth2:
-      url: 'https://app.ogcio.gov.hk/auth/oauth2/authorize/'
-      client: 'testing'
+      url: process.env.AUTH_URL
+      client: process.env.CLIENT_ID
       scope: 'User'
       response_type: 'token'
     eventBus: eventBus
