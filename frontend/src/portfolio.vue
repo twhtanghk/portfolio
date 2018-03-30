@@ -55,7 +55,7 @@ module.exports =
     list: ->
       ret = []
       opts = @opts
-      gen = await @$refs.portfolio?.listAll opts
+      gen = @$refs.portfolio?.listAll opts
       if gen?
         {next} = gen()
         while true
