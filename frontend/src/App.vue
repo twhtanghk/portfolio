@@ -52,4 +52,5 @@ module.exports =
       .then (res) =>
         for i in res
           @tags.push i
+        @selected.push res[0] if res.length
 </script>
