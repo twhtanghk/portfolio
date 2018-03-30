@@ -10,6 +10,6 @@
     "views": false
   },
   "paths": {
-    "public": "www"
+    "public": "dist"
   }
 }
