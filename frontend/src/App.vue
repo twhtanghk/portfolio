@@ -1,21 +1,17 @@
 <template>
   <div id="app">
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
-    <model ref='portfolio' :eventBus='eventBus' baseUrl='http://172.22.0.3:1337/api/portfolio' />
+    <model ref='portfolio' :eventBus='eventBus' baseUrl='api/portfolio' />
     <b-container>
-      <b-row>
-        <b-col>
-          <mselect v-model='selected' :options='tags' :multiple='true' />
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
+      <mselect v-model='selected' :options='tags' :multiple='true' />
+      <b-tabs>
+        <b-tab title='On hold'>
           <onhold :tags='selected' />
-        </b-col>
-        <b-col>
+        </b-tab>
+        <b-tab title='TX'>
           <portfolio :tags='selected' />
-        </b-col>
-      </b-row>
+        </b-tab>
+      </b-tabs>
     </b-container>
   </div>
 </template>

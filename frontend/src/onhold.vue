@@ -1,6 +1,6 @@
 <template>
   <div>
-    <model ref='onhold' :eventBus='eventBus' baseUrl='http://172.22.0.3:1337/api/portfolio/onhold' />
+    <model ref='onhold' :eventBus='eventBus' baseUrl='api/portfolio/onhold' />
     <b-table striped hover :items='list' :fields='fields'>
       <template slot='symbol' slot-scope='data'>
         <quote :symbol='data.value' />

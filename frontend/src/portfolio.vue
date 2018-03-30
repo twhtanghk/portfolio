@@ -1,6 +1,6 @@
 <template>
   <div>
-    <model ref='portfolio' :eventBus='eventBus' baseUrl='http://172.22.0.3:1337/api/portfolio' />
+    <model ref='portfolio' :eventBus='eventBus' baseUrl='api/portfolio' />
     <b-table striped hover :items='list' :fields='fields'>
       <template slot='symbol' slot-scope='data'>
         <quote :symbol='data.value' />
