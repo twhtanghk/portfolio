@@ -5,9 +5,15 @@
       <template slot='symbol' slot-scope='data'>
         <quote :symbol='data.value' />
       </template>
+      <template slot='change' slot-scope='data'>
+        <span :class='profit(data.value)'>{{data.value}}</span>
+      </template>
+      <template slot='percent' slot-scope='data'>
+        <span :class='profit(data.value)'>{{data.value}}</span>
+      </template>
       <template slot='bottom-row' slot-scope='data'>
         <td :colspan='11'>
-          Total: {{sum.total}} Change: {{sum.diffTotal}} Percent: {{sum.percent}}
+          Total: {{float(sum.total)}} Change: {{float(sum.diffTotal)}} Percent: {{float(sum.percent)}}
         </td>
       </template>
     </b-table>
@@ -34,17 +40,20 @@ module.exports =
     fields: [
       { key: 'symbol', sortable: true }
       { key: 'name', sortable: true }
-      { key: 'quantity', sortable: true }
+      { key: 'quantity', sortable: true, formatter: format.float }
       { key: 'cost', sortable: false, formatter: format.float }
       { key: 'price', sortable: false, formatter: format.float }
       { key: 'maxPrice', sortable: false, formatter: format.float }
       { key: 'avgPrice', sortable: false, formatter: format.float }
-      { key: 'marketPrice', sortable: false }
+      { key: 'marketPrice', sortable: false, formatter: format.float }
       { key: 'total', sortable: true, formatter: format.float }
       { key: 'change', sortable: true, formatter: format.float }
       { key: 'percent', sortable: true, formatter: format.float }
     ]
   methods:
+    profit: (val) ->
+      if val >= 0 then 'profit' else 'loss'
+    float: format.float
     format: (item) ->
       avgPrice = item.price / item.quantity
       cost =  avgPrice * item.quantity
@@ -75,7 +84,7 @@ module.exports =
       @list?.map (item) ->
         ret.total += item.total
         ret.diffTotal += item.change
-      _.extend ret, percent: if ret.total != 0 then ret.diffTotal / ret.total else 0
+      _.extend ret, percent: if ret.total != 0 then 100 * ret.diffTotal / ret.total else 0
   asyncComputed:
     list: ->
       opts = @opts
@@ -83,3 +92,13 @@ module.exports =
       res?.map (item) =>
         @format item
 </script>
+
+<style>
+.profit {
+  color: green;
+}
+
+.loss {
+  color: red;
+}
+</style>
