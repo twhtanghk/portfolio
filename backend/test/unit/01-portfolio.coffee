@@ -1,4 +1,5 @@
 req = require 'supertest'
+path = require 'path'
 co = require 'co'
 
 describe 'Portfolio Controller', ->
@@ -77,3 +78,11 @@ describe 'Portfolio Controller', ->
       .set 'Authorization', "Bearer #{token}"
       .set 'Content-Type', 'application/json'
       .expect 200
+
+  it 'import', ->
+    req sails.hooks.http.app
+      .post '/api/portfolio/import'
+      .set 'Authorization', "Bearer #{token}"
+      .field 'tag', 'test'
+      .attach 'file', path.join(__dirname, '../data/test.csv')
+      .expect 201

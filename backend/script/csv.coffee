@@ -2,6 +2,8 @@ co = require 'co'
 stream = require 'stream'
 Parser = require('csv').parse
 req = require 'supertest'
+Promise = require 'bluebird'
+Sails = Promise.promisifyAll require 'sails'
 
 token = null
 
@@ -26,12 +28,12 @@ create = (data) ->
     .set 'Content-Type', 'application/json'
     .send data
 
-class CSV extends stream.Transform
+class CSV extends stream.Writable
   constructor: (opts) ->
     super opts
     @tag = opts.tag
 
-  _transform: (chunk, encoding, cb) ->
+  _write: (chunk, encoding, cb) ->
     fields = [
       'Symbol'
       'Name'
@@ -59,22 +61,19 @@ class CSV extends stream.Transform
 lift = ->
   fs = require 'fs'
   config = JSON.parse fs.readFileSync './.sailsrc'
-  require 'bluebird'
-    .promisifyAll require 'sails'
-    .liftAsync config
+  Sails.liftAsync config
   
 convert = (tag) ->
   new Promise (resolve, reject) ->
     process.stdin
       .on 'error', reject
-      .on 'end', resolve
       .pipe new Parser columns: true
       .on 'error', reject
       .pipe new CSV
         tag: tag
-        readableObjectMode: true
-        writableObjectMode: true
+        objectMode: true
       .on 'error', reject
+      .on 'finish', resolve
 
 tag = process.argv[2]
 
@@ -82,4 +81,6 @@ lift()
   .then getToken
   .then ->
     convert tag
+  .then ->
+    Sails.lowerAsync()
   .catch console.error
