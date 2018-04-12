@@ -7,5 +7,5 @@ module.exports =
     if data?
       new Date(data).toLocaleDateString()
   float: (data) ->
-    data?.toFixed 2
+    Number(data?.toFixed 2).toLocaleString()
 </script>
