@@ -6,10 +6,10 @@
         <quote :symbol='data.value' />
       </template>
       <template slot='change' slot-scope='data'>
-        <span :class='profit(data.value)'>{{data.value}}</span>
+        <span :class='style(data.value)'>{{float(data.value)}}</span>
       </template>
       <template slot='percent' slot-scope='data'>
-        <span :class='profit(data.value)'>{{data.value}}</span>
+        <span :class='style(data.value)'>{{float(data.value)}}</span>
       </template>
       <template slot='bottom-row' slot-scope='data'>
         <td :colspan='11'>
@@ -40,18 +40,18 @@ module.exports =
     fields: [
       { key: 'symbol', sortable: true }
       { key: 'name', sortable: true }
-      { key: 'quantity', sortable: true, formatter: format.float }
-      { key: 'cost', sortable: false, formatter: format.float }
-      { key: 'price', sortable: false, formatter: format.float }
-      { key: 'maxPrice', sortable: false, formatter: format.float }
-      { key: 'avgPrice', sortable: false, formatter: format.float }
-      { key: 'marketPrice', sortable: false, formatter: format.float }
-      { key: 'total', sortable: true, formatter: format.float }
-      { key: 'change', sortable: true, formatter: format.float }
-      { key: 'percent', sortable: true, formatter: format.float }
+      { key: 'quantity', sortable: true, formatter: @float }
+      { key: 'cost', sortable: false, formatter: @float }
+      { key: 'price', sortable: false, formatter: @float }
+      { key: 'maxPrice', sortable: false, formatter: @float }
+      { key: 'avgPrice', sortable: false, formatter: @float }
+      { key: 'marketPrice', sortable: false, formatter: @float }
+      { key: 'total', sortable: true, formatter: @float }
+      { key: 'change', sortable: true }
+      { key: 'percent', sortable: true }
     ]
   methods:
-    profit: (val) ->
+    style: (val) ->
       if val >= 0 then 'profit' else 'loss'
     float: format.float
     format: (item) ->
