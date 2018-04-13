@@ -4,7 +4,7 @@ module.exports =
       '*': false
       import: ['isAuth']
       count: ['isAuth', 'isOwner']
-      findOnHold: ['isAuth', 'isOwner']
+      findHold: ['isAuth', 'isOwner']
       tags: ['isAuth', 'isOwner']
       find: ['isAuth', 'isOwner']
       create: ['isAuth', 'setCreatedBy']
