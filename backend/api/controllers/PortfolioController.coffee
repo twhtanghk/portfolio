@@ -76,7 +76,7 @@ module.exports =
               ret.push tag
         res.ok ret
       .catch res.negotiate
-  findOnHold: (req, res) ->
+  findHold: (req, res) ->
     sails.models.portfolio
-      .findOnHold util.parseCriteria req
+      .findHold util.parseCriteria req
       .then res.ok, res.negotiate

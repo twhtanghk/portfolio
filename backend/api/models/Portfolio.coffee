@@ -30,7 +30,7 @@ module.exports =
       type: 'array'
     isSell: ->
       /^sell$/i.test @type
-  findOnHold: (cond) ->
+  findHold: (cond) ->
     @find()
       .where cond
       .then (collection) ->

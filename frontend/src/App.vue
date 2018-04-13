@@ -5,8 +5,8 @@
     <b-container>
       <mselect v-model='selected' :options='tags' :multiple='true' />
       <b-tabs>
-        <b-tab title='On hold'>
-          <onhold :tags='selected' />
+        <b-tab title='Holding'>
+          <hold :tags='selected' />
         </b-tab>
         <b-tab title='TX'>
           <portfolio :tags='selected' />
@@ -30,7 +30,7 @@ eventBus = require('vue.oauth2/src/eventBus').default
 module.exports =
   components:
     portfolio: require('./portfolio').default
-    onhold: require('./onhold').default
+    hold: require('./hold').default
     mselect: require('vue-multiselect').default
   data: ->
     oauth2:

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <model ref='onhold' :eventBus='eventBus' baseUrl='api/portfolio/onhold' />
+    <model ref='hold' :eventBus='eventBus' baseUrl='api/portfolio/hold' />
     <b-table striped hover :items='list' :fields='fields'>
       <template slot='symbol' slot-scope='data'>
         <quote :symbol='data.value' />
@@ -88,7 +88,7 @@ module.exports =
   asyncComputed:
     list: ->
       opts = @opts
-      res = await @$refs.onhold?.list opts
+      res = await @$refs.hold?.list opts
       res?.map (item) =>
         @format item
 </script>
