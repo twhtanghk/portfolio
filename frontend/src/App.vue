@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <fab />
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
     <model ref='portfolio' :eventBus='eventBus' baseUrl='api/portfolio' />
     <b-container>
@@ -26,12 +27,18 @@ Vue.use require('vue.oauth2/src/plugin').default
 Vue.use require('vue.model/src/plugin').default
 Vue.use require('vue-async-computed')
 eventBus = require('vue.oauth2/src/eventBus').default
+Vue.component 'upload', 
+  extends: require('vue-fab/src/upload').default
+  methods:
+    change: (event) ->
+      eventBus.$emit 'files.upload', event.target.files
 
 module.exports =
   components:
     portfolio: require('./portfolio').default
     hold: require('./hold').default
     mselect: require('vue-multiselect').default
+    fab: require('./fab').default
   data: ->
     oauth2:
       url: process.env.AUTH_URL
