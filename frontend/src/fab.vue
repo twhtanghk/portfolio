@@ -3,13 +3,19 @@
 </template>
 
 <script lang='coffee'>
-upload = require('vue-fab/src/upload').default
+eventBus = require('vue.oauth2/src/eventBus').default
+Vue = require('vue').default
+Vue.component 'upload',
+  extends: require('vue-fab/src/upload').default
+  methods:
+    change: (event) ->
+      eventBus.$emit 'files.upload', event.target.files
 
 module.exports =
   components:
     fab: require('vue-fab').default
   data: ->
     actions: [
-      { name: 'upload', tooltip: 'Upload', 'icon-component': upload }
+      { name: 'upload', tooltip: 'Upload', 'icon-component': 'upload' }
     ]
 </script>

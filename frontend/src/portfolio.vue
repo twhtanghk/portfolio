@@ -65,6 +65,6 @@ module.exports =
             ret.push @format i
       ret
   mounted: ->
-    @eventBus.$on 'files.upload', (files) ->
-      @$refs.portfolio?.upload files: files
+    @eventBus.$on 'files.upload', (files) =>
+      await @$refs.portfolio?.upload files: files
 </script>

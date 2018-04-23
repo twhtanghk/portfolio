@@ -27,11 +27,6 @@ Vue.use require('vue.oauth2/src/plugin').default
 Vue.use require('vue.model/src/plugin').default
 Vue.use require('vue-async-computed')
 eventBus = require('vue.oauth2/src/eventBus').default
-Vue.component 'upload', 
-  extends: require('vue-fab/src/upload').default
-  methods:
-    change: (event) ->
-      eventBus.$emit 'files.upload', event.target.files
 
 module.exports =
   components:
