@@ -48,16 +48,18 @@ module.exports =
   import: (req, res) ->
     front = req.file 'files'
     back = new Receiver req: req
-    error = (err) ->
+    resolve = ->
+      res.ok {}
+    reject = (err) ->
       res.negotiate err
       front.destroy()
       back.destroy()
-      back.removeListener 'finish', res.ok
+      back.removeListener 'finish', resolve
     front
-      .on 'error', error
+      .on 'error', reject
       .pipe back
-      .on 'error', error
-      .on 'finish', res.ok
+      .on 'error', reject
+      .on 'finish', resolve
   count: (req, res) ->
     sails.models.portfolio
       .count createdBy: req.user.email
