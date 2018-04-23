@@ -9,6 +9,6 @@ module.exports =
     'GET /api/portfolio/tags':
       controller: 'PortfolioController'
       action: 'tags'
-    'POST /api/portfolio/import':
+    'POST /api/portfolio/upload':
       controller: 'PortfolioController'
       action: 'import'

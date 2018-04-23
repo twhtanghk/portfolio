@@ -13,7 +13,7 @@ class Receiver extends stream.Writable
       .pipe new Parser columns: true
       .on 'error', cb
       .pipe new CSV
-        tag: @req.params.all().tag
+        tag: @req.params.all().tag || file.filename
         user: @req.user
         objectMode: true
       .on 'error', cb
@@ -26,39 +26,40 @@ class CSV extends stream.Writable
     @user = opts.user
 
   _write: (chunk, encoding, cb) ->
-    fields = [
-      'Symbol'
-      'Name'
-      'Type'
-      'Date'
-      'Shares'
-      'Price'
-      'Comission'
-      'Notes'
-    ]
-    data =
-      symbol: chunk['Symbol']
-      name: chunk['Name']
-      type: chunk['Type']
-      date: new Date chunk['Date']
-      quantity: chunk['Shares']
-      price: chunk['Price']
-      notes: chunk['Notes']
-      tags: [@tag]
     sails.models.portfolio
-      .create _.extend data, createdBy: @user
+      .create
+        symbol: chunk['Symbol']
+        name: chunk['Name']
+        type: chunk['Type']
+        date: new Date chunk['Date']
+        quantity: chunk['Shares']
+        price: chunk['Price']
+        notes: chunk['Notes']
+        tags: [@tag]
+        createdBy: @user
       .then ->
         cb()
-      .catch cb
+      .catch (err) ->
+        msg = "#{err.details}: #{JSON.stringify chunk}"
+        sails.log.error msg
+        cb msg
 
 module.exports =
   import: (req, res) ->
-    req
-      .file 'file'
-      .on 'error', res.negotiate
-      .pipe new Receiver req: req
-      .on 'error', res.negotiate
-      .on 'finish', res.created
+    front = req.file 'files'
+    back = new Receiver req: req
+    resolve = ->
+      res.ok {}
+    reject = (err) ->
+      res.negotiate err
+      front.destroy()
+      back.destroy()
+      back.removeListener 'finish', resolve
+    front
+      .on 'error', reject
+      .pipe back
+      .on 'error', reject
+      .on 'finish', resolve
   count: (req, res) ->
     sails.models.portfolio
       .count createdBy: req.user.email

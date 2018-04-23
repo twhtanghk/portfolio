@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <fab />
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
     <model ref='portfolio' :eventBus='eventBus' baseUrl='api/portfolio' />
     <b-container>
@@ -32,6 +33,7 @@ module.exports =
     portfolio: require('./portfolio').default
     hold: require('./hold').default
     mselect: require('vue-multiselect').default
+    fab: require('./fab').default
   data: ->
     oauth2:
       url: process.env.AUTH_URL

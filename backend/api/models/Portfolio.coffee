@@ -28,6 +28,7 @@ module.exports =
       required: true
     tags:
       type: 'array'
+      defaultsTo: []
     isSell: ->
       /^sell$/i.test @type
   findHold: (cond) ->
