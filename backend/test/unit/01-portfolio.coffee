@@ -81,8 +81,8 @@ describe 'Portfolio Controller', ->
 
   it 'import', ->
     req sails.hooks.http.app
-      .post '/api/portfolio/import'
+      .post '/api/portfolio/upload'
       .set 'Authorization', "Bearer #{token}"
       .field 'tag', 'test'
-      .attach 'file', path.join(__dirname, '../data/test.csv')
+      .attach 'files', path.join(__dirname, '../data/test.csv')
       .expect 201
