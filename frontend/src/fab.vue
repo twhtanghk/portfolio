@@ -1,5 +1,5 @@
 <template>
-  <fab :actions='actions' bg-color='#007bff' />
+  <fab :actions='actions' bg-color='#007bff' @create='create' />
 </template>
 
 <script lang='coffee'>
@@ -14,8 +14,15 @@ Vue.component 'upload',
 module.exports =
   components:
     fab: require('vue-fab').default
+  props: [
+    'eventBus'
+  ]
   data: ->
     actions: [
+      { name: 'create', tooltip: 'Create', icon: 'add' }
       { name: 'upload', tooltip: 'Upload', 'icon-component': 'upload' }
     ]
+  methods:
+    create: ->
+      @eventBus.$emit 'tx.form'
 </script>

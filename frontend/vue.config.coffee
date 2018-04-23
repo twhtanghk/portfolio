@@ -1,6 +1,7 @@
 webpack = require 'webpack'
 
 module.exports =
+  compiler: true
   configureWebpack: (config) ->
     if process.env.NODE_ENV == 'production'
       config.output.path = require('path').resolve __dirname, '../backend/dist'

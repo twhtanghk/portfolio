@@ -33,9 +33,21 @@ module.exports =
       { key: 'total', sortable: true, formatter: format.float }
       { key: 'tags', sortable: true }
     ]
+    list: []
   methods:
     format: (item) ->
       _.extend item, total: item.quantity * item.price
+    reload: ->
+      @list.splice 0
+      opts = @opts
+      gen = @$refs.portfolio?.listAll opts
+      if gen?
+        {next} = gen()
+        while true
+          {done, value} = await next @list.length
+          break if done
+          for i in value
+            @list.push @format i
   computed:
     opts: ->
       ret = 
@@ -51,20 +63,13 @@ module.exports =
           tags:
             contains: tag
       ret
-  asyncComputed:
-    list: ->
-      ret = []
-      opts = @opts
-      gen = @$refs.portfolio?.listAll opts
-      if gen?
-        {next} = gen()
-        while true
-          {done, value} = await next ret.length
-          break if done
-          for i in value
-            ret.push @format i
-      ret
+  watch:
+    opts: ->
+      @reload()
   mounted: ->
     @eventBus.$on 'files.upload', (files) =>
       await @$refs.portfolio?.upload files: files
+    @eventBus.$on 'tx.create', (data) =>
+      data.tags = @tags
+      @list.push await @$refs.portfolio.create data: data
 </script>
