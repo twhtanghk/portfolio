@@ -2,6 +2,29 @@
   <div>
     <model ref='portfolio' :eventBus='eventBus' baseUrl='api/portfolio' />
     <b-table striped hover :items='list' :fields='fields'>
+      <template slot='top-row' slot-scope='data' v-if='showAdd'>
+        <td>
+          <b-form-input v-model='tx.symbol' type='text' required placeholder='0001' />
+        </td>
+        <td>
+        </td>
+        <td>
+          <b-form-select v-model='tx.type' :options='type' />
+        </td>
+        <td>
+          <b-form-input v-model='tx.date' type='date' required />
+        </td>
+        <td>
+          <b-form-input v-model='tx.quantity' type='number' required />
+        </td>
+        <td>
+          <b-form-input v-model='tx.price' type='number' required />
+        </td>
+        <td colspan='2'>
+          <b-button size='sm' variant='primary' @click='add'>Add</b-button>
+          <b-button size='sm' variant='secondary' @click='cancel'>Cancel</b-button>
+        </td>
+      </template>
       <template slot='symbol' slot-scope='data'>
         <quote :symbol='data.value' />
       </template>
@@ -33,10 +56,33 @@ module.exports =
       { key: 'total', sortable: true, formatter: format.float }
       { key: 'tags', sortable: true }
     ]
+    showAdd: false
     list: []
+    tx:
+      symbol: ''
+      type: 'Buy'
+      date: new Date().toISOString().slice(0, 10)
+      quantity: 0
+      price: 0
+      notes: ''
+      tags: @tags
+    type: [
+      { value: 'Buy', text: 'Buy' }
+      { value: 'Sell', text: 'Sell' }
+      { value: 'Bonus', text: 'Bonus' }
+    ]
   methods:
     format: (item) ->
       _.extend item, total: item.quantity * item.price
+    add: ->
+      @list.unshift @format await @$refs.portfolio.create data: @tx
+      @showAdd = false
+    edit: ->
+      console.log arguments
+    del: ->
+      console.log arguments
+    cancel: ->
+      @showAdd = false
     reload: ->
       @list.splice 0
       opts = @opts
@@ -69,7 +115,12 @@ module.exports =
   mounted: ->
     @eventBus.$on 'files.upload', (files) =>
       await @$refs.portfolio?.upload files: files
-    @eventBus.$on 'tx.create', (data) =>
-      data.tags = @tags
-      @list.push await @$refs.portfolio.create data: data
+    @eventBus.$on 'tx.add', =>
+      @showAdd = true
 </script>
+
+<style scoped>
+td, th {
+  vertical-align: middle;
+}
+</style>

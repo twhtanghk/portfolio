@@ -24,5 +24,5 @@ module.exports =
     ]
   methods:
     create: ->
-      @eventBus.$emit 'tx.form'
+      @eventBus.$emit 'tx.add'
 </script>
