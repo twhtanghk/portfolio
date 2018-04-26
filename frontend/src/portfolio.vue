@@ -101,9 +101,9 @@ module.exports =
           type:
             '!': null
           sort:
-            symbol: 1
-            date: 1
+            date: -1
             tags: 1
+            symbol: 1
       if @tags.length != 0
         ret.data.or = @tags?.map (tag) ->
           tags:
@@ -122,5 +122,9 @@ module.exports =
 <style scoped>
 td, th {
   vertical-align: middle;
+}
+
+button + button {
+  margin-left: 0.2em;
 }
 </style>
