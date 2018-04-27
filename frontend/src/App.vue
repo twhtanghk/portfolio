@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <fab :eventBus='eventBus' />
-    <create :eventBus='eventBus' />
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
     <model ref='portfolio' :eventBus='eventBus' baseUrl='api/portfolio' />
     <b-container>
@@ -35,7 +34,6 @@ module.exports =
     hold: require('./hold').default
     mselect: require('vue-multiselect').default
     fab: require('./fab').default
-    create: require('./portfolioForm').default
   data: ->
     oauth2:
       url: process.env.AUTH_URL
@@ -48,7 +46,7 @@ module.exports =
   created: ->
     eventBus.$emit 'login'
   mounted: ->
-    @$refs.portfolio.read 'tags'
+    @$refs.portfolio.read url: 'api/portfolio/tags'
       .then (res) =>
         for i in res
           @tags.push i
