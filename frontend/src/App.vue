@@ -46,7 +46,7 @@ module.exports =
   created: ->
     eventBus.$emit 'login'
   mounted: ->
-    @$refs.portfolio.read 'tags'
+    @$refs.portfolio.read url: 'api/portfolio/tags'
       .then (res) =>
         for i in res
           @tags.push i
