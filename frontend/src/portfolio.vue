@@ -7,7 +7,7 @@
         <li @click='menuDel'>Delete</li>
       </ul>
     </v-context>
-    <b-table striped hover :items='list' :fields='fields' @row-clicked='rowClick'>
+    <b-table striped hover :items='list' :fields='fields' @row-dblclicked='rowClick'>
       <template slot='top-row' slot-scope='data' v-if='showAdd'>
         <td>
           <b-form-input v-model='tx.symbol' type='text' required placeholder='0001' />
@@ -58,12 +58,13 @@
         <b-button size='sm' variant='primary' @click.stop='update' v-if='data.index == showEdit'>
           Update
         </b-button>
-      </template>
-      <template slot='tags' slot-scope='data'>
-        <template v-if='data.index != showEdit'>{{data.value.join()}}</template>
         <b-button size='sm' variant='secondary' @click.stop='cancel' v-if='data.index == showEdit'>
           Cancel
         </b-button>
+      </template>
+      <template slot='tags' slot-scope='data'>
+        <template v-if='data.index != showEdit'>{{data.value.join()}}</template>
+        <mselect v-model='tx.tags' :options='alltags' :multiple='true' v-if='data.index == showEdit' />
       </template>
     </b-table>
   </div>
@@ -78,23 +79,15 @@ format = require('./format').default
 module.exports =
   components:
     quote: require('./quote').default
+    mselect: require('vue-multiselect').default
     vContext: require('vue-context').default
-    bFormInput:
-      extends: Vue.component 'bFormInput'
-      mounted: ->
-        @$el.onclick = (event) ->
-          event.stopPropagation()
-    bFormSelect:
-      extends: Vue.component 'bFormSelect'
-      mounted: ->
-        @$el.onclick = (event) ->
-          event.stopPropagation()
   props: [
     'tags'
   ]
   data: ->
     eventBus: require('vue.oauth2/src/eventBus').default
     fields: [
+      { key: 'tags', sortable: true }
       { key: 'symbol', sortable: true }
       { key: 'name', sortable: true }
       { key: 'type', sortable: false }
@@ -102,7 +95,6 @@ module.exports =
       { key: 'quantity', sortable: true }
       { key: 'price', sortable: false }
       { key: 'total', sortable: true, formatter: format.float }
-      { key: 'tags', sortable: true }
     ]
     showAdd: false
     showEdit: null
@@ -120,6 +112,7 @@ module.exports =
       { value: 'Sell', text: 'Sell' }
       { value: 'Bonus', text: 'Bonus' }
     ]
+    alltags: []
   methods:
     format: (item) ->
       _.extend item,
@@ -147,6 +140,7 @@ module.exports =
       @tx.date = @list[@showEdit].date.toISOString().slice 0, 10
       @tx.quantity = @list[@showEdit].quantity
       @tx.price = @list[@showEdit].price
+      @tx.tags = @list[@showEdit].tags
     menuDel: (event) ->
       index = @$refs.menu.userData
       await @$refs.portfolio.delete data: @list[index]
@@ -181,6 +175,10 @@ module.exports =
     opts: ->
       @reload()
   mounted: ->
+    @$refs.portfolio.read url: 'api/portfolio/tags'
+      .then (res) =>
+        for i in res
+          @alltags.push i
     @eventBus.$on 'files.upload', (files) =>
       await @$refs.portfolio?.upload files: files
     @eventBus.$on 'tx.add', =>
