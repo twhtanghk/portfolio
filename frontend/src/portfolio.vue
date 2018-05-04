@@ -114,36 +114,38 @@ module.exports =
     ]
     alltags: []
   methods:
-    format: (item) ->
-      _.extend item,
-        date: new Date item.date
-        updatedAt: new Date item.updatedAt
-        createdAt: new Date item.createdAt
-        total: item.quantity * item.price
     add: ->
-      @list.unshift @format await @$refs.portfolio.create data: @tx
+      @list.unshift await @$refs.portfolio.create data: @tx
       @showAdd = false
     update: ->
       @tx.date = new Date @tx.date
-      data = _.extend @list[@showEdit], @tx
-      @list[@showEdit] = @format await @$refs.portfolio.update data: data
+      index = @list.findIndex (data) =>
+        @tx.id == data.id
+      _.extend @list[index], @tx
+      _.extend @list[index], await @$refs.portfolio.update data: @list[index]
       @showEdit = null
     cancel: (event) ->
       @showAdd = false
       @showEdit = null
     rowClick: (data, index, event) ->
-      @$refs.menu.open event, index
+      @$refs.menu.open event,
+        index: index
+        data: data
     menuEdit: (event) ->
-      @showEdit = @$refs.menu.userData
-      @tx.symbol = @list[@showEdit].symbol
-      @tx.type = @list[@showEdit].type
-      @tx.date = @list[@showEdit].date.toISOString().slice 0, 10
-      @tx.quantity = @list[@showEdit].quantity
-      @tx.price = @list[@showEdit].price
-      @tx.tags = @list[@showEdit].tags
+      {index, data} = @$refs.menu.userData
+      @showEdit = index
+      @tx.id = data.id
+      @tx.symbol = data.symbol
+      @tx.type = data.type
+      @tx.date = data.date?.toISOString().slice 0, 10
+      @tx.quantity = data.quantity
+      @tx.price = data.price
+      @tx.tags = data.tags
     menuDel: (event) ->
-      index = @$refs.menu.userData
-      await @$refs.portfolio.delete data: @list[index]
+      {index, data} = @$refs.menu.userData
+      await @$refs.portfolio.delete data: data
+      index = @list.findIndex (tx) ->
+        tx.id == data.id
       @list.splice index, 1
     reload: ->
       @list.splice 0
@@ -155,7 +157,7 @@ module.exports =
           {done, value} = await next @list.length
           break if done
           for i in value
-            @list.push @format i
+            @list.push i
   computed:
     opts: ->
       ret = 
