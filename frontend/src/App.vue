@@ -20,13 +20,26 @@
 <script lang='coffee'>
 require 'vue-multiselect/dist/vue-multiselect.min.css'
 
+_ = require 'lodash'
 d3 = require 'd3'
 Vue = require('vue').default
 Vue.use require('bootstrap-vue').default
 Vue.use require('vue.oauth2/src/plugin').default
-Vue.use require('vue.model/src/plugin').default
 Vue.use require('vue-async-computed')
 eventBus = require('vue.oauth2/src/eventBus').default
+Vue.component 'model', 
+  extends: require('vue.model/src/model').default
+  methods:
+    format: (item) ->
+      if item.date?
+        _.extend item, date: new Date item.date
+      if item.updatedAt?
+        _.extend item, updatedAt: new Date item.updatedAt
+      if item.createdAt?
+        _.extend item, createdAt: new Date item.createdAt
+      if item.quantity? and item.price?
+        _.extend item, total: item.quantity * item.price
+      item
 
 module.exports =
   components:
@@ -46,7 +59,7 @@ module.exports =
   created: ->
     eventBus.$emit 'login'
   mounted: ->
-    @$refs.portfolio.read url: 'api/portfolio/tags'
+    @$refs.portfolio.get url: 'api/portfolio/tags'
       .then (res) =>
         for i in res
           @tags.push i
