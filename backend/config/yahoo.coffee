@@ -18,6 +18,7 @@ module.exports =
           collection.map (item) ->
             {price, summaryDetail} = list[yahoo.symbol item.symbol]
             _.extend item,
+              name: price.shortName
               marketPrice: price.marketPrice || price.regularMarketPrice
               dividend:
                 rate: summaryDetail.dividendRate
