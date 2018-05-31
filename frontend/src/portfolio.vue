@@ -150,14 +150,8 @@ module.exports =
     reload: ->
       @list.splice 0
       opts = @opts
-      gen = @$refs.portfolio?.listAll opts
-      if gen?
-        {next} = gen()
-        while true
-          {done, value} = await next @list.length
-          break if done
-          for i in value
-            @list.push i
+      for await value from @$refs.portfolio?.iterAll opts
+         @list.push value
   computed:
     opts: ->
       ret = 
