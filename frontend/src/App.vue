@@ -3,7 +3,6 @@
     <fab :eventBus='eventBus' />
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
     <model ref='portfolio' :eventBus='eventBus' baseUrl='api/portfolio' />
-    <b-container>
       <mselect v-model='selected' :options='tags' :multiple='true' />
       <b-tabs>
         <b-tab title='Holding'>
@@ -13,7 +12,6 @@
           <portfolio :tags='selected' />
         </b-tab>
       </b-tabs>
-    </b-container>
   </div>
 </template>
 
