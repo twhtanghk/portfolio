@@ -1,13 +1,14 @@
 webpack = require 'webpack'
 
 module.exports =
-  compiler: true
   outputDir: '../backend/dist'
   configureWebpack: (config) ->
-    if process.env.NODE_ENV == 'production'
-      config.output.publicPath = './'
+    config.output.publicPath = ''
     config.plugins.push new webpack.EnvironmentPlugin [
       'CLIENT_ID'
       'AUTH_URL'
     ]
+    config.module.rules.push
+      test: /\.coffee$/
+      use: [ 'coffee-loader' ]
     return
