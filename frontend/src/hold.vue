@@ -12,7 +12,7 @@
         <span :class='style(data.value)'>{{float(data.value)}}</span>
       </template>
       <template slot='bottom-row' slot-scope='data'>
-        <td :colspan='11'>
+        <td :colspan='15'>
           Total: {{float(sum.total)}} Change: {{float(sum.diffTotal)}} Percent: {{float(sum.percent)}}
         </td>
       </template>
@@ -46,6 +46,10 @@ module.exports =
       { key: 'maxPrice', sortable: false, formatter: @float }
       { key: 'avgPrice', sortable: false, formatter: @float }
       { key: 'marketPrice', sortable: false, formatter: @float }
+      { key: 'div', sortable: true, formatter: @float }
+      { key: 'yield', sortable: true, formatter: @float }
+      { key: 'exDivDate', sortable: true, formatter: format.date }
+      { key: 'pe', label: 'PE', sortable: true, formatter: @float }
       { key: 'total', sortable: true, formatter: @float }
       { key: 'change', sortable: true }
       { key: 'percent', sortable: true }
@@ -59,12 +63,21 @@ module.exports =
       cost =  avgPrice * item.quantity
       curr = item.marketPrice * item.quantity
       diff = curr - cost
-      _.extend item,
-         cost: cost
-         total: curr
-         change: diff
-         percent: (diff / cost) * 100
-         avgPrice: avgPrice
+      symbol: item.symbol
+      name: item.name
+      quantity: item.quantity
+      cost: cost
+      total: curr
+      change: diff
+      percent: (diff / cost) * 100
+      marketPrice: item.marketPrice
+      maxPrice: item.maxPrice
+      avgPrice: avgPrice
+      price: item.price
+      div: item.dividend.rate
+      yield: item.dividend.yield * 100
+      exDivDate: item.dividend.exdate
+      pe: item.pe
   computed:
     opts: ->
       ret =
