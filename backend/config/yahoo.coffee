@@ -17,7 +17,7 @@ module.exports =
         .then (list) ->
           collection.map (item) ->
             {price, summaryDetail} = list[yahoo.symbol item.symbol]
-            _.extend item,
+            _.defaults item,
               name: price.shortName
               marketPrice: price.marketPrice || price.regularMarketPrice
               dividend:

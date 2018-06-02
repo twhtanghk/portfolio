@@ -35,11 +35,15 @@
       </template>
       <template slot='symbol' slot-scope='data'>
         <quote :symbol='data.value' v-if='data.index != showEdit' />
-        <b-form-input v-model='tx.symbol' type='text'required v-if='data.index == showEdit' />
+        <b-form-input v-model='tx.symbol' type='text' required v-if='data.index == showEdit' />
       </template>
       <template slot='type' slot-scope='data'>
         <template v-if='data.index != showEdit'>{{data.value}}</template>
         <b-form-select v-model='tx.type' :options='type' v-if='data.index == showEdit' />
+      </template>
+      <template slot='name' slot-scope='data'>
+        <template v-if='data.index != showEdit'>{{data.value}}</template>
+        <b-form-input v-model='tx.name' type='text' v-if='data.index == showEdit' />
       </template>
       <template slot='date' slot-scope='data'>
         <template v-if='data.index != showEdit'>{{data.value}}</template>
