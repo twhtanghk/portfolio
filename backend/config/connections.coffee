@@ -3,4 +3,4 @@ module.exports =
     mongo:
       adapter: 'sails-mongo'
       driver: 'mongodb'
-      url: 'mongodb://@mongo:27017/portfolio'
+      url: process.env.DB || 'mongodb://@mongo:27017/portfolio'
