@@ -29,7 +29,7 @@ eventBus = require('vue.oauth2/src/eventBus').default
 
 format = require('./format').default
 
-module.exports =
+export default
   components:
     quote: require('./quote').default
   props: [

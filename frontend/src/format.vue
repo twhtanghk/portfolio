@@ -1,8 +1,5 @@
-<template>
-</template>
-
 <script lang='coffee'>
-module.exports =
+export default
   date: (data) ->
     if data?
       new Date(data).toLocaleDateString()

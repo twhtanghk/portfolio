@@ -10,4 +10,4 @@ RUN (cd backend && yarn install) \
 
 EXPOSE 1337
 
-ENTRYPOINT "$APP/entrypoint.sh"
+CMD (cd frontend && yarn build) && (cd backend && yarn start)

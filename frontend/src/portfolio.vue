@@ -80,7 +80,7 @@ Vue.use require('bootstrap-vue').default
 
 format = require('./format').default
 
-module.exports =
+export default
   components:
     quote: require('./quote').default
     mselect: require('vue-multiselect').default

@@ -39,7 +39,7 @@ Vue.component 'model',
         _.extend item, total: item.quantity * item.price
       item
 
-module.exports =
+export default
   components:
     portfolio: require('./portfolio').default
     hold: require('./hold').default
