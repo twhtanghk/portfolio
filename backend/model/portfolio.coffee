@@ -27,7 +27,7 @@ class Portfolio extends Model
       collection = await @model.find ctx.request.body
       quantity = (item) ->
         if Portfolio.isSell item then -item.quantity else item.quantity
-      ctx.response.body await d3
+      ctx.response.body = await d3
         .nest()
         .key (item) ->
           item.symbol
@@ -50,22 +50,13 @@ class Portfolio extends Model
   tags: (ctx, next) ->
     try
       ret = []
-      for await i from @model.find createdBy: ctx.request.user.id
+      list = await @model.find ctx.request.body
+      for i in list
         for tag in i.tags
           if tag not in ret
             ret.push tag
-      ctx.response.body = tag
+      ctx.response.body = ret
     catch err
       ctx.throw 500, err.toString()
 
-module.exports =
-  new Portfolio()
-    .actions [
-      'create'
-      'find'
-      'update'
-      'destroy'
-      'isAuthorized'
-      'hold'
-      'tags'
-    ]
+module.exports = new Portfolio()

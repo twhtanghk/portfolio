@@ -3,7 +3,7 @@
 </template>
 
 <script lang='coffee'>
-eventBus = require('vue.oauth2/src/eventBus').default
+{eventBus} = require('jsOAuth2/frontend/src/lib').default
 Vue = require('vue').default
 Vue.component 'upload',
   extends: require('vue-fab/src/upload').default

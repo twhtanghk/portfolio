@@ -1,6 +1,6 @@
 Model = require 'jsOAuth2/backend/model/model'
 
-class User extend Model
+class User extends Model
   name: 'user'
 
   attributes: [
@@ -12,6 +12,4 @@ class User extend Model
 
     @model.createIndex {email: 1}, {unique: true}
 
-module.exports =
-  new User()
-    .actions()
+module.exports = new User()

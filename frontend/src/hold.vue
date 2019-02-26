@@ -1,6 +1,5 @@
 <template>
   <div>
-    <model ref='hold' :eventBus='eventBus' baseUrl='api/portfolio/hold' />
     <b-table striped hover :items='list' :fields='fields'>
       <template slot='symbol' slot-scope='data'>
         <quote :symbol='data.value' />
@@ -25,7 +24,8 @@ _ = require 'lodash'
 d3 = require 'd3'
 Vue = require('vue').default
 Vue.use require('bootstrap-vue').default
-eventBus = require('vue.oauth2/src/eventBus').default
+{eventBus} = require('jsOAuth2/frontend/src/lib').default
+{Portfolio} = require('./model').default
 
 format = require('./format').default
 
@@ -36,7 +36,6 @@ export default
     'tags'
   ]
   data: ->
-    eventBus: eventBus
     fields: [
       { key: 'symbol', sortable: true }
       { key: 'name', sortable: true }
@@ -54,6 +53,7 @@ export default
       { key: 'change', sortable: true }
       { key: 'percent', sortable: true }
     ]
+    list: []
   methods:
     style: (val) ->
       if val >= 0 then 'profit' else 'loss'
@@ -98,12 +98,9 @@ export default
         ret.total += item.total
         ret.diffTotal += item.change
       _.extend ret, percent: if ret.total != 0 then 100 * ret.diffTotal / ret.total else 0
-  asyncComputed:
-    list: ->
-      opts = @opts
-      res = await @$refs.hold?.list opts
-      res?.map (item) =>
-        @format item
+  created: ->
+    for await i from Portfolio.iterAll data: {sort: 'date', skip: @list.length}
+      @list.push i
 </script>
 
 <style>

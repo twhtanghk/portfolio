@@ -1,6 +1,5 @@
 <template>
   <div>
-    <model ref='portfolio' :eventBus='eventBus' baseUrl='api/portfolio' />
     <v-context ref='menu'>
       <ul>
         <li @click='menuEdit'>Edit</li>
@@ -77,6 +76,8 @@
 <script lang='coffee'>
 Vue = require('vue').default
 Vue.use require('bootstrap-vue').default
+{Portfolio} = require('./model').default
+{eventBus} = require('jsOAuth2/frontend/src/lib').default
 
 format = require('./format').default
 
@@ -89,7 +90,7 @@ export default
     'tags'
   ]
   data: ->
-    eventBus: require('vue.oauth2/src/eventBus').default
+    eventBus: eventBus
     fields: [
       { key: 'tags', sortable: true }
       { key: 'symbol', sortable: true }
@@ -119,14 +120,14 @@ export default
     alltags: []
   methods:
     add: ->
-      @list.unshift await @$refs.portfolio.create data: @tx
+      @list.unshift await Portfolio.create data: @tx
       @showAdd = false
     update: ->
       @tx.date = new Date @tx.date
       index = @list.findIndex (data) =>
         @tx.id == data.id
       _.extend @list[index], @tx
-      _.extend @list[index], await @$refs.portfolio.update data: @list[index]
+      _.extend @list[index], await Portfolio.update data: @list[index]
       @showEdit = null
     cancel: (event) ->
       @showAdd = false
@@ -154,7 +155,7 @@ export default
     reload: ->
       @list.splice 0
       opts = @opts
-      for await value from @$refs.portfolio?.iterAll opts
+      for await value from Portfolio.iterAll opts
          @list.push value
   computed:
     opts: ->
@@ -175,13 +176,13 @@ export default
     opts: ->
       @reload()
   mounted: ->
-    @$refs.portfolio.read url: 'api/portfolio/tags'
+    Portfolio.read url: 'api/portfolio/tags'
       .then (res) =>
         for i in res
           @alltags.push i
-    @eventBus.$on 'files.upload', (files) =>
+    eventBus.$on 'files.upload', (files) =>
       await @$refs.portfolio?.upload files: files
-    @eventBus.$on 'tx.add', =>
+    eventBus.$on 'tx.add', =>
       @showAdd = true
 </script>
 

@@ -24,7 +24,7 @@ Vue = require('vue').default
 Vue.use require('bootstrap-vue').default
 Vue.use require('vue.oauth2/src/plugin').default
 Vue.use require('vue-async-computed')
-eventBus = require('vue.oauth2/src/eventBus').default
+{eventBus} = require('jsOAuth2/frontend/src/lib').default
 Vue.component 'model', 
   extends: require('vue.model/src/model').default
   methods:

@@ -1,15 +1,19 @@
-Promise = require 'bluebird'
-Sails = Promise.promisifyAll require 'sails'
-fs = require 'fs'
-config = JSON.parse fs.readFileSync './.sailsrc'
+assert = require 'assert'
+
+[
+  'USER_ID'
+  'USER_SECRET'
+  'CLIENT_ID'
+  'CLIENT_SECRET'
+  'TOKEN_URL'
+  'VERIFY_URL'
+].map (name) ->
+  assert name of process.env, "process.env.#{name} not yet defined"
 
 before ->
-  Sails
-    .liftAsync config
-    .catch console.error
+  global.server = await require '../index'
 
 after ->
-  Sails
-    .lowerAsync()
-    .catch console.error
+  global.server.close()
+  process.exit()
     
