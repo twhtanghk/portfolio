@@ -32,7 +32,7 @@
     "koa-passport": "^4.1.1",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
-    "mocha": "^6.0.0",
+    "mocha": "^6.0.2",
     "monk": "^6.0.6",
     "needle": "^2.2.4",
     "passport-http-bearer": "^1.0.1",
