@@ -6,7 +6,7 @@ router = require './router'
 serve = require 'koa-static'
 cors = require '@koa/cors'
 Promise = require 'bluebird'
-passport = require './passport'
+passport = require 'koa-passport'
 
 app = new Koa()
 app.context.onerror = require 'koa-better-error-handler'
