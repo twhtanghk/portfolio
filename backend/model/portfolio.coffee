@@ -52,9 +52,10 @@ class Portfolio extends Model
       ret = []
       list = await @model.find ctx.request.body
       for i in list
-        for tag in i.tags
-          if tag not in ret
-            ret.push tag
+        if i.tags?
+          for tag in i.tags
+            if tag not in ret
+              ret.push tag
       ctx.response.body = ret
     catch err
       ctx.throw 500, err.toString()
