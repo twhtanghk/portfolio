@@ -1,3 +1,4 @@
+_ = require 'lodash'
 d3 = require 'd3'
 Model = require 'jsOAuth2/backend/model/model'
 
@@ -24,7 +25,10 @@ class Portfolio extends Model
 
   hold: (ctx, next) ->
     try
-      collection = await @model.find ctx.request.body
+      optsField = ['limit', 'skip', 'sort']
+      opts = _.pick ctx.request.body, optsField
+      query = _.omit ctx.request.body, optsField
+      collection = await @model.find query, opts
       quantity = (item) ->
         if Portfolio.isSell item then -item.quantity else item.quantity
       ctx.response.body = await d3
