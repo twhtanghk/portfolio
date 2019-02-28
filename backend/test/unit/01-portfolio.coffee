@@ -30,6 +30,24 @@ describe 'Portfolio', ->
       .then (res) ->
         console.log res.body
 
+  it 'list for tags', ->
+    req global.server
+      .post '/api/portfolio'
+      .set 'X-HTTP-Method-Override', 'GET'
+      .set 'Authorization', "Bearer #{token}"
+      .set 'Content-Type', 'application/json'
+      .send 
+        tags: $in: ['IB', 'cheung']
+        skip: 1
+        limit: 100
+        sort:
+          symbol: -1
+          quantity: 1
+      .expect 200
+      .then (res) ->
+        for i in res.body
+          console.log i
+
   it 'hold', ->
     req global.server
       .get '/api/portfolio/hold'
