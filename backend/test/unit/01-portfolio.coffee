@@ -45,14 +45,27 @@ describe 'Portfolio', ->
           quantity: 1
       .expect 200
       .then (res) ->
-        for i in res.body
-          console.log i
+        console.log res.body
 
   it 'hold', ->
     req global.server
       .get '/api/portfolio/hold'
       .set 'Authorization', "Bearer #{token}"
       .set 'Content-Type', 'application/json'
+      .expect 200
+      .then (res) ->
+        console.log res.body
+
+  it 'hold for specific tags', ->
+    req global.server
+      .post '/api/portfolio/hold'
+      .set 'X-HTTP-Method-Override', 'GET'
+      .set 'Authorization', "Bearer #{token}"
+      .set 'Content-Type', 'application/json'
+      .send 
+        tags: $in: ['IB', 'cheung']
+        sort:
+          symbol: -1
       .expect 200
       .then (res) ->
         console.log res.body
