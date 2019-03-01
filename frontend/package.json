@@ -27,7 +27,9 @@
     "vue-multiselect": "^2.1.3",
     "vue-template-compiler": "^2.6.7",
     "vue.model": "https://github.com/twhtanghk/vue.model",
-    "vue.oauth2": "https://github.com/twhtanghk/vue.oauth2"
+    "vue.oauth2": "https://github.com/twhtanghk/vue.oauth2",
+    "vuelidate": "^0.7.4",
+    "vuetify": "^1.5.4"
   },
   "babel": {
     "presets": [

@@ -10,16 +10,17 @@ export default
       eventBus:
         default: ->
           eventBus
-      baseUrl: 
+      baseUrl:
         default: 'api/portfolio'
     methods:
       date: (data, field) ->
-        if field?
-          date[field] = new Date field
+        if data[field]?
+          data[field] = new Date field
+        data
       format: (data) ->
-        data = date data, 'date'
-        data = date data, 'updatedAt'
-        data = date data, 'createdAt'
+        ['date', 'updatedAt', 'createdAt'].map (name) =>
+          data = @date data, name
         if data.quantity? and data.price?
-          _.extend data, total: item.quantity * data.price
+          _.extend data, total: data.quantity * data.price
+        data
 </script>

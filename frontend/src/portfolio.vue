@@ -175,6 +175,7 @@ export default
   watch:
     opts: ->
       @reload()
+###
   mounted: ->
     Portfolio.read url: 'api/portfolio/tags'
       .then (res) =>
@@ -184,6 +185,7 @@ export default
       await @$refs.portfolio?.upload files: files
     eventBus.$on 'tx.add', =>
       @showAdd = true
+###
 </script>
 
 <style scoped>
