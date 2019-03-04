@@ -3,21 +3,18 @@
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
     <toolbar />
     <!--alert /-->
-    <v-tabs centered color='cyan' dark icons-and-text>
-      <v-tabs-slider color='yellow' />
+    <v-tabs fixed-tabs color='cyan' dark slider-color='yellow' @change='tabSelected'>
       <v-tab>
         Hold
-        <v-icon></v-icon>
       </v-tab>
       <v-tab>
         TX
-        <v-icon></v-icon>
       </v-tab> 
       <v-tab-item>
-        <hold />
+        <hold :tags='tags' />
       </v-tab-item>
       <v-tab-item>
-        <portfolio />
+        <tx :tags='tags' />
       </v-tab-item>
     </v-tabs>
   </v-app>
@@ -28,12 +25,13 @@ _ = require 'lodash'
 Vue = require('vue').default
 Vue.use require 'vuetify'
 Vue.use require('vuelidate').default
+Vue.use require('bootstrap-vue').default
 Vue.use require('vue.oauth2/src/plugin').default
 {eventBus} = require('jsOAuth2/frontend/src/lib').default
 
 export default
   components:
-    portfolio: require('./portfolio').default
+    tx: require('./tx').default
     hold: require('./hold').default
     toolbar: require('./toolbar').default
 #    alert: require('jsOAuth2/frontend/src/alert').default
@@ -44,6 +42,14 @@ export default
       scope: 'User'
       response_type: 'token'
     eventBus: eventBus
+    tags: []
+  methods:
+    tagUpdated: (newtags) ->
+      @tags.splice 0, @tags.length
+      for i in newtags
+        @tags.push i
+    tabSelected: (selected) ->
+      eventBus.$emit 'tab.selected', selected
 </script>
 
 <style lang='scss'>
@@ -58,6 +64,10 @@ export default
   color: #2c3e50;
   * {
     text-transform: none !important;
+  }
+
+  .portfolio-header div div {
+    text-transform: capitalize !important;
   }
 }
 </style>

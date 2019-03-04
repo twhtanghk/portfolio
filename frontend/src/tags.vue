@@ -20,7 +20,7 @@ export default
       eventBus.$emit 'tags.changed', tags: @selected
   created: ->
     try
-      res = await Portfolio.get url: 'api/portfolio/tags'
+      res = await Portfolio.get url: "#{Portfolio.baseUrl}/tags"
       for i in res
         @tags.push i
       @selected.push res[0] if res.length

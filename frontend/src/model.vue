@@ -11,7 +11,7 @@ export default
         default: ->
           eventBus
       baseUrl:
-        default: 'api/portfolio'
+        default: "#{process.env.API_URL}/api/portfolio"
     methods:
       date: (data, field) ->
         if data[field]?

@@ -7,9 +7,15 @@
             <div>name</div><div>symbol</div>
           </template>
           <template v-slot:content>
-            <div>quantity</div><div>price</div>
+            <div>type</div>
+            <div>date</div>
+            <div>quantity</div>
+            <div>price</div>
           </template>
-          <template v-slot:footer></template>
+          <template v-slot:footer>
+            <div>tags</div>
+            <div>total</div>
+          </template>
         </row>
         <holditem v-for='item in list' :item='item' :key='item._id'/>
       </v-flex>
@@ -18,21 +24,21 @@
 </template>
 
 <script lang='coffee'>
-_ = require 'lodash'
 {eventBus} = require('jsOAuth2/frontend/src/lib').default
 {Portfolio} = require('./model').default
 
 export default
   components:
-    holditem: require('./holditem').default
+    txitem: require('./txitem').default
     row: require('./row').default
+  props:
+    tags: Array
   data: ->
     list: []
-  created: ->
-    eventBus.$on 'tags.changed', ({tags}) =>
+  methods:
+    reload: ->
       @list.splice 0, @list.length
       res = await Portfolio.get
-        url: "#{Portfolio.baseUrl}/hold"
         data: 
           tags:
             $in: tags
@@ -40,4 +46,8 @@ export default
             date: 1
       for i in res
         @list.push i
+  created: ->
+    eventBus.$on 'tab.selected', (tab) =>
+      if tab == 1
+        @reload()
 </script>
