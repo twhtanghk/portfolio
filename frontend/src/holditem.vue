@@ -7,8 +7,8 @@
       </div>
     </template>
     <template v-slot:content>
-      <div>{{item.quantity}}</div>
-      <div>{{item.price}}</div>
+      <div>{{float(item.quantity)}}</div>
+      <div>{{float(item.price)}}</div>
     </template>
     <template v-slot:footer>
     </template>
@@ -16,6 +16,8 @@
 </template>
 
 <script lang='coffee'>
+format = require('./format').default
+
 export default
   props: [
     'item'
@@ -23,4 +25,7 @@ export default
   components:
     row: require('./row').default
     quote: require('./quote').default
+  methods:
+    date: format.date
+    float: format.float
 </script>
