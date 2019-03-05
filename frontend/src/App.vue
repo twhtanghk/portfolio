@@ -3,7 +3,7 @@
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
     <toolbar />
     <!--alert /-->
-    <v-tabs fixed-tabs color='cyan' dark slider-color='yellow' @change='tabSelected'>
+    <v-tabs fixed-tabs color='cyan' dark slider-color='yellow' @change='change'>
       <v-tab>
         Hold
       </v-tab>
@@ -11,10 +11,10 @@
         TX
       </v-tab> 
       <v-tab-item>
-        <hold :tags='tags' />
+        <hold :tab='tab'/>
       </v-tab-item>
       <v-tab-item>
-        <tx :tags='tags' />
+        <tx :tab='tab'/>
       </v-tab-item>
     </v-tabs>
   </v-app>
@@ -42,14 +42,10 @@ export default
       scope: 'User'
       response_type: 'token'
     eventBus: eventBus
-    tags: []
+    tab: 'hold'
   methods:
-    tagUpdated: (newtags) ->
-      @tags.splice 0, @tags.length
-      for i in newtags
-        @tags.push i
-    tabSelected: (selected) ->
-      eventBus.$emit 'tab.selected', selected
+    change: (tab) ->
+      @tab = ['hold', 'tx'][tab]
 </script>
 
 <style lang='scss'>

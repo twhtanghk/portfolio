@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-layout column>
+    <v-layout column v-scroll='nextPage'>
       <v-flex xs12>
         <row class='portfolio-header'>
           <template v-slot:header>
@@ -17,7 +17,7 @@
             <div>total</div>
           </template>
         </row>
-        <holditem v-for='item in list' :item='item' :key='item._id'/>
+        <txitem v-for='item in list' :item='item' :key='item._id'/>
       </v-flex>
     </v-layout>
   </v-container>
@@ -32,22 +32,41 @@ export default
     txitem: require('./txitem').default
     row: require('./row').default
   props:
-    tags: Array
+    tab: String
   data: ->
     list: []
+    tags: []
+    sort:
+      date: 1
   methods:
-    reload: ->
-      @list.splice 0, @list.length
-      res = await Portfolio.get
-        data: 
-          tags:
-            $in: tags
-          sort: 
-            date: 1
-      for i in res
-        @list.push i
+    nextPage: ->
+      if document.documentElement.scrollTop + window.innerHeight == document.documentElement.offsetHeight
+        @load @list.length
+    load: (skip = 0) ->
+      if skip == 0
+        @list.splice 0, @list.length
+      try
+        data =
+          sort: @sort
+          skip: skip
+        if @tags.length
+          data.tags = $in: @tags
+        res = await Portfolio.get data: data
+        for i in res
+          @list.push i
+      catch err
+        console.error err.toString()
+  watch:
+    tab: (newtab, oldtab) ->
+      if newtab == 'tx'
+        @load()
+    tags: (newtags, oldtags) ->
+      if @tab == 'tx'
+        @load()
   created: ->
-    eventBus.$on 'tab.selected', (tab) =>
-      if tab == 1
-        @reload()
+    eventBus
+      .$on 'tags.changed', ({tags}) =>
+        @tags.splice 0, @tags.length
+        for i in tags
+          @tags.push i
 </script>

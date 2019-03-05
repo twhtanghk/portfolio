@@ -15,7 +15,7 @@ export default
     methods:
       date: (data, field) ->
         if data[field]?
-          data[field] = new Date field
+          data[field] = new Date data[field]
         data
       format: (data) ->
         ['date', 'updatedAt', 'createdAt'].map (name) =>

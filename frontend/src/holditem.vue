@@ -2,7 +2,9 @@
   <row>
     <template v-slot:header>
       <div>{{item.name}}</div>
-      <div>{{item.symbol}}</div>
+      <div>
+        <quote :symbol='item.symbol'/>
+      </div>
     </template>
     <template v-slot:content>
       <div>{{item.quantity}}</div>
@@ -20,4 +22,5 @@ export default
   ]
   components:
     row: require('./row').default
+    quote: require('./quote').default
 </script>

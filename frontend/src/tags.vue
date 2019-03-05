@@ -23,8 +23,6 @@ export default
       res = await Portfolio.get url: "#{Portfolio.baseUrl}/tags"
       for i in res
         @tags.push i
-      @selected.push res[0] if res.length
-      @change()
     catch err
       console.error err.toString()
 </script>

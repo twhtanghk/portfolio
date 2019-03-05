@@ -26,18 +26,38 @@ export default
   components:
     holditem: require('./holditem').default
     row: require('./row').default
+  props:
+    tab: String
   data: ->
     list: []
+    tags: []
+    sort:
+      date: 1
+  methods:
+    reload: ->
+      try
+        @list.splice 0, @list.length
+        data = sort: @sort
+        if @tags.length
+          data.tags = $in: @tags
+        res = await Portfolio.get
+          url: "#{Portfolio.baseUrl}/hold"
+          data: data
+        for i in res
+          @list.push i
+      catch err
+        console.error err.toString()
+  watch:
+    tab: (newtab, oldtab) ->
+      if newtab == 'hold'
+        @reload()
+    tags: (newtags, oldtags) ->
+      if @tab == 'hold'
+        @reload()
   created: ->
-    eventBus.$on 'tags.changed', ({tags}) =>
-      @list.splice 0, @list.length
-      res = await Portfolio.get
-        url: "#{Portfolio.baseUrl}/hold"
-        data: 
-          tags:
-            $in: tags
-          sort: 
-            date: 1
-      for i in res
-        @list.push i
+    eventBus
+      .$on 'tags.changed', ({tags}) =>
+        @tags.splice 0, @tags.length
+        for i in tags
+          @tags.push i
 </script>
