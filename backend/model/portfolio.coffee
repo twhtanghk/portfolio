@@ -36,12 +36,15 @@ class Portfolio extends Model
         .key (item) ->
           item.symbol
         .rollup (group) ->
-          name: group[0].name
-          quantity: d3.sum group, quantity
-          price: d3.sum group, (item) ->
-            quantity(item) * item.price
-          maxPrice: d3.max group, (item) ->
-            if Portfolio.isSell item then 0 else item.price
+          share = d3.sum group, quantity
+          total = d3.sum group, (item) ->
+            share * item.price
+          return 
+            name: group[0].name
+            quantity: share
+            price: total / share
+            maxPrice: d3.max group, (item) ->
+              if Portfolio.isSell item then 0 else item.price
         .entries collection
         .map (item) ->
           item.value.symbol = item.key
