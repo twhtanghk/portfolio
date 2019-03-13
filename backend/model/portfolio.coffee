@@ -38,7 +38,7 @@ class Portfolio extends Model
         .rollup (group) ->
           share = d3.sum group, quantity
           total = d3.sum group, (item) ->
-            share * item.price
+            quantity(item) * item.price
           return 
             name: group[0].name
             quantity: share
