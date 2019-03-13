@@ -1,20 +1,27 @@
 <template>
   <row>
-    <template v-slot:header>
-      <div>{{item.name}}</div>
+    <template v-slot:col1>
       <div>
+       {{item.name}}
         <quote :symbol='item.symbol'/>
       </div>
+      <div v-if='Array.isArray(item.change)' :class='{profit: item.change[0] > 0
+, loss: item.change[0] < 0}'>
+       {{float(item.change[0])}} / {{float(item.change[1])}}%
+      </div>
     </template>
-    <template v-slot:content>
-      <div>{{item.type}}</div>
-      <div>{{date(item.date)}}</div>
+    <template v-slot:col2>
       <div>{{float(item.quantity)}}</div>
-      <div>{{float(item.price)}}</div>
+      <div>{{item.type}} / {{float(item.price)}} / {{date(item.date)}}</div>
     </template>
-    <template v-slot:footer>
+    <template v-slot:col3>
       <div>{{item.tags}}</div>
-      <div>{{float(item.total)}}</div>
+    </template>
+    <template v-slot:col4>
+      <div>{{float(item.total)}} / {{float(item.currTotal)}}</div>
+      <div :class='{profit: item.diffTotal > 0, loss: item.diffTotal < 0}'>
+        {{float(item.diffTotal)}} / {{float(item.diffPercent)}}%
+      </div>
     </template>
   </row>
 </template>

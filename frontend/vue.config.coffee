@@ -19,6 +19,9 @@ module.exports =
       'CLIENT_ID'
       'AUTH_URL'
       'API_URL'
+      'MQTTURL'
+      'MQTTUSER'
+      'MQTTTOPIC'
     ]
     config.module.rules.push
       test: /\.coffee$/

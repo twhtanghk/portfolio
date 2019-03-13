@@ -22,5 +22,15 @@ export default
           data = @date data, name
         if data.quantity? and data.price?
           _.extend data, total: data.quantity * data.price
+        _.extend data,
+          currPrice: null
+          currTotal: null
+          diffTotal: null
+          diffPercent: null
+          change: null
+          pe: null
+          pb: null
+          dividend: null
+          lastUpdatedAt: null
         data
 </script>

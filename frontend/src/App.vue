@@ -62,8 +62,16 @@ export default
     text-transform: none !important;
   }
 
-  .portfolio-header div div {
-    text-transform: capitalize !important;
+  .odd {
+    background-color: #f2f2f2;
+  }
+
+  .profit {
+    color: green;
+  }
+
+  .loss {
+    color: red;
   }
 }
 </style>

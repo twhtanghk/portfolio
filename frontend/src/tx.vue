@@ -3,21 +3,23 @@
     <v-layout column v-scroll='nextPage'>
       <v-flex xs12>
         <row class='portfolio-header'>
-          <template v-slot:header>
-            <div>name</div><div>symbol</div>
+          <template v-slot:col1>
+            <div>Name</div>
+            <div>Daily Change</div>
           </template>
-          <template v-slot:content>
-            <div>type</div>
-            <div>date</div>
-            <div>quantity</div>
-            <div>price</div>
+          <template v-slot:col2>
+            <div>Quantity</div>
+            <div>Type / Price / Date</div>
           </template>
-          <template v-slot:footer>
-            <div>tags</div>
-            <div>total</div>
+          <template v-slot:col3>
+            <div>Tag</div>
+          </template>
+          <template v-slot:col4>
+            <div>Total</div>
+            <div>P&ampL</div>
           </template>
         </row>
-        <txitem v-for='item in list' :item='item' :key='item._id'/>
+        <txitem :class='{odd: index % 2 == 1}' v-for='(item, index) in list' :item='item' :key='item._id'/>
       </v-flex>
     </v-layout>
   </v-container>
@@ -26,6 +28,7 @@
 <script lang='coffee'>
 {eventBus} = require('jsOAuth2/frontend/src/lib').default
 {Portfolio} = require('./model').default
+client = require('./mqtt').default
 
 export default
   components:
@@ -54,6 +57,10 @@ export default
         res = await Portfolio.get data: data
         for i in res
           @list.push i
+        client.publish process.env.MQTTTOPIC, JSON.stringify
+          action: 'subscribe'
+          data: _.map res, (item) ->
+            parseInt item.symbol
       catch err
         console.error err.toString()
   watch:
@@ -64,6 +71,7 @@ export default
       if @tab == 'tx'
         @load()
   created: ->
+    client.apply @list
     eventBus
       .$on 'tags.changed', ({tags}) =>
         @tags.splice 0, @tags.length
