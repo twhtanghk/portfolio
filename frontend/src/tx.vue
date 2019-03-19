@@ -57,10 +57,6 @@ export default
         res = await Portfolio.get data: data
         for i in res
           @list.push i
-        client.publish process.env.MQTTTOPIC, JSON.stringify
-          action: 'subscribe'
-          data: _.map res, (item) ->
-            parseInt item.symbol
       catch err
         console.error err.toString()
   watch:

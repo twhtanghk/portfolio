@@ -11,13 +11,13 @@
     </template>
     <template v-slot:col2>
       <div>{{float(item.quantity)}}</div>
-      <div>{{float(item.price)}} / {{float(item.currPrice)}}</div>
+      <div>{{float(item.price)}} / <span v-if='item.quote'>{{float(item.quote.curr)}}</span></div>
     </template>
     <template v-slot:col3>
-      <div>{{float(item.pe)}} / {{float(item.pb)}}</div>
-      <div v-if='Array.isArray(item.dividend)'>
-       {{float(item.dividend[0])}} / {{float(item.dividend[1])}}% /
-       <a :href='item.dividend[2]'>details</a>
+      <div v-if='item.details'>{{float(item.details.pe)}} / {{float(item.details.pb)}}</div>
+      <div v-if='item.details && item.details.dividend && Array.isArray(item.details.dividend)'>
+       {{float(item.details.dividend[0])}} / {{float(item.details.dividend[1])}}% /
+       <a :href='item.details.dividend[2]'>details</a>
       </div>
     </template>
     <template v-slot:col4>
