@@ -23,14 +23,18 @@ export default
         if data.quantity? and data.price?
           _.extend data, total: data.quantity * data.price
         _.extend data,
-          currPrice: null
+          quote:
+            curr: NaN
+            high: NaN
+            low: NaN
+            last: NaN
+            change: [NaN, NaN]
+          details:
+            pe: NaN
+            pb: NaN
+            dividend: [NaN, NaN, '']
           currTotal: null
           diffTotal: null
           diffPercent: null
-          change: null
-          pe: null
-          pb: null
-          dividend: null
-          lastUpdatedAt: null
         data
 </script>

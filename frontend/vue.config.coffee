@@ -2,6 +2,7 @@
 CompressionWebpackPlugin = require 'compression-webpack-plugin'
 
 module.exports =
+  publicPath: '.'
   outputDir: '../backend/dist'
   configureWebpack: (config) ->
     if process.env.NODE_ENV == 'production'

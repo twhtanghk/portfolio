@@ -5,13 +5,13 @@
         {{item.name}}
         <quote :symbol='item.symbol'/>
       </div>
-      <div v-if='Array.isArray(item.change)' :class='{profit: item.change[0] > 0, loss: item.change[0] < 0}'>
-       {{float(item.change[0])}} / {{float(item.change[1])}}%
+      <div :class='{profit: item.quote.change[0] > 0, loss: item.quote.change[0] < 0}'>
+       {{float(item.quote.change[0])}} / {{float(item.quote.change[1])}}%
       </div>
     </template>
     <template v-slot:col2>
       <div>{{float(item.quantity)}}</div>
-      <div>{{float(item.price)}} / <span v-if='item.quote'>{{float(item.quote.curr)}}</span></div>
+      <div>{{float(item.price)}} / {{float(item.quote.curr)}}</div>
     </template>
     <template v-slot:col3>
       <div v-if='item.details'>{{float(item.details.pe)}} / {{float(item.details.pb)}}</div>

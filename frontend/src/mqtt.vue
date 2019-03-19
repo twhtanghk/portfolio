@@ -23,13 +23,13 @@ client.apply = (list) ->
         if msg.symbol == parseInt item.symbol
           switch msg.src
             when 'ib'
-              item.quote = msg.quote
+              Object.assign item.quote, msg.quote
               item.currTotal = item.quote.curr * item.quantity
             when 'aastocks'
-              item.details = msg.details
+              Object.assign item.details, msg.details
+              item.name = msg.name
           item.diffTotal = item.currTotal - item.total
           item.diffPercent = item.diffTotal * 100 / item.total
-          item
 
 export default client
 </script>
