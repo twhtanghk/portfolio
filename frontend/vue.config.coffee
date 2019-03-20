@@ -4,6 +4,15 @@ CompressionWebpackPlugin = require 'compression-webpack-plugin'
 module.exports =
   publicPath: '.'
   outputDir: '../backend/dist'
+  pages:
+    index:
+      entry: 'src/main.js'
+      template: 'public/index.html'
+      filename: 'index.html'
+    callback:
+      entry: 'src/callback.coffee'
+      template: 'public/index.html'
+      filename: 'callback.html'
   configureWebpack: (config) ->
     if process.env.NODE_ENV == 'production'
       config.plugins.push new CompressionWebpackPlugin
