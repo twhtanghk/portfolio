@@ -16,17 +16,17 @@ client.apply = (list) ->
   client.on 'message', (topic, msg) ->
     if topic == process.env.MQTTTOPIC
       try
-        msg = JSON.parse msg
+        msg = JSON.parse msg.toString()
       catch err
         console.error "#{msg}: #{err.toString()}"
       for item in list
         if msg.symbol == parseInt item.symbol
           switch msg.src
             when 'ib'
-              Object.assign item.quote, msg.quote
+              item.quote = Object.assign item.quote, msg.quote
               item.currTotal = item.quote.curr * item.quantity
             when 'aastocks'
-              Object.assign item.details, msg.details
+              item.details = Object.assign item.details, msg.details
               item.name = msg.name
           item.diffTotal = item.currTotal - item.total
           item.diffPercent = item.diffTotal * 100 / item.total
