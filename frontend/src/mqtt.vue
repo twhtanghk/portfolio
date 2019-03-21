@@ -11,25 +11,27 @@ client = mqtt
     outgoingStore: outgoing
     clean: false
   .on 'connect', ->
-    client.subscribe process.env.MQTTTOPIC, qos: 2
+    client.subscribe "#{process.env.MQTTTOPIC.split('/')[0]}/#", qos: 2
 client.apply = (list) ->
   client.on 'message', (topic, msg) ->
-    if topic == process.env.MQTTTOPIC
-      try
-        msg = JSON.parse msg.toString()
-      catch err
-        console.error "#{msg}: #{err.toString()}"
-      for item in list
-        if msg.symbol == parseInt item.symbol
-          switch msg.src
-            when 'ib'
-              item.quote = Object.assign item.quote, msg.quote
-              item.currTotal = item.quote.curr * item.quantity
-            when 'aastocks'
-              item.details = Object.assign item.details, msg.details
-              item.name = msg.name
-          item.diffTotal = item.currTotal - item.total
-          item.diffPercent = item.diffTotal * 100 / item.total
+    try
+      msg = JSON.parse msg.toString()
+    catch err
+      console.error "#{msg}: #{err.toString()}"
+    mergeQuote = (item, msg) ->
+      item.quote = Object.assign item.quote, msg.quote
+      item.currTotal = item.quote.curr * item.quantity
+    for item in list
+      if msg.symbol == parseInt item.symbol
+        switch msg.src
+          when 'ib'
+            mergeQuote item, msg
+          when 'aastocks'
+            mergeQuote item, msg
+            item.details = Object.assign item.details, msg.details
+            item.name = msg.name
+        item.diffTotal = item.currTotal - item.total
+        item.diffPercent = item.diffTotal * 100 / item.total
 
 export default client
 </script>
