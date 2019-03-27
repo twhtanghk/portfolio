@@ -4,7 +4,13 @@
       <v-flex xs12>
         <row class='portfolio-header'>
           <template v-slot:col1>
-            <div>Name</div>
+            <div>
+              Name
+              <order @sort="sort('name', $event)" />
+              /
+              Symbol
+              <order @sort="sort('symbol', $event)" />
+            </div>
             <div>Daily Change</div>
           </template>
           <template v-slot:col2>
@@ -15,12 +21,22 @@
           </template>
           <template v-slot:col3>
             <div>
-              <span>PE</span>/<span>PB</span>
+              PE
+              <order @sort="sort('details.pe', $event)" />
+              /
+              PB
+              <order @sort="sort('details.pb', $event)" />
             </div>
             <div>Dividend</div>
           </template>
           <template v-slot:col4>
-            <div>Total</div>
+            <div>
+              Total
+              <order @sort="sort('total', $event)" />
+              /
+              Current
+              <order @sort="sort('currTotal', $event)" />
+            </div>
             <div>P&ampL</div>
           </template>
         </row>
@@ -40,18 +56,30 @@ export default
   components:
     holditem: require('./holditem').default
     row: require('./row').default
+    order: require('./order').default
   props:
     tab: String
   data: ->
     list: []
     tags: []
-    sort:
-      date: 1
+    order: []
   methods:
+    sort: (prop, value) ->
+      index = _.findIndex @order, prop
+      if value
+        if index != -1
+          @order[index][prop] = value
+        else
+          ret = {}
+          ret[prop] = value
+          @order.push ret
+      else
+        @order.splice index, 1
     reload: ->
       try
         @list.splice 0, @list.length
-        data = sort: @sort
+        data = sort:
+          date: 1
         if @tags.length
           data.tags = $in: @tags
         res = await Portfolio.get
@@ -66,6 +94,20 @@ export default
       catch err
         console.error err.toString()
   watch:
+    order:
+      handler: (after, before) ->
+        console.log JSON.stringify after
+        compare = _.map @order, (obj) ->
+          [prop, order] = Object.entries(obj)[0]
+          (a, b) ->
+            order * (_.get(a, prop) - _.get(b, prop))
+        @list.sort (a, b) ->
+          for i in compare
+            ret = i(a, b)
+            if ret != 0
+              return ret
+          return 0
+      deep: true
     tab: (newtab, oldtab) ->
       if newtab == 'hold'
         @reload()
@@ -80,3 +122,9 @@ export default
         for i in tags
           @tags.push i
 </script>
+
+<style lang='scss' scoped>
+.portfolio-header * {
+  vertical-align: middle;
+}
+</style>
