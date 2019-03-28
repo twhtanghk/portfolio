@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-layout column>
-      <v-flex xs12>
+      <v-flex>
         <row class='portfolio-header'>
           <template v-slot:col1>
             <div>
