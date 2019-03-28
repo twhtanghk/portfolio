@@ -31,18 +31,21 @@ class Portfolio extends Model
       collection = await @model.find query, opts
       quantity = (item) ->
         if Portfolio.isSell item then -item.quantity else item.quantity
-      ctx.response.body = await d3
+      ctx.response.body = d3
         .nest()
         .key (item) ->
           item.symbol
         .rollup (group) ->
+          txBuy = _.filter group, (item) ->
+            not Portfolio.isSell item
+          lastBuy = _.maxBy txBuy, 'createdAt'
           share = d3.sum group, quantity
           total = d3.sum group, (item) ->
             quantity(item) * item.price
           return 
             name: group[0].name
             quantity: share
-            price: total / share
+            price: lastBuy.price
             maxPrice: d3.max group, (item) ->
               if Portfolio.isSell item then 0 else item.price
         .entries collection
