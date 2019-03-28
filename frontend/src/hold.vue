@@ -41,6 +41,20 @@
           </template>
         </row>
         <holditem :class='{odd: index % 2 == 1}' v-for='(item, index) in list' :item='item' :key='item._id'/>
+        <row class='portfolio-footer'>
+          <template v-slot:col4>
+            <div>
+              {{float(sumTotal)}}
+              /
+              {{float(sumCurrTotal)}}
+            </div>
+            <div>
+              {{float(sumDiffTotal)}}
+              /
+              {{float(sumDiffTotalPercent)}}%
+            </div>
+          </template>
+        </row>
       </v-flex>
     </v-layout>
   </v-container>
@@ -48,6 +62,8 @@
 
 <script lang='coffee'>
 _ = require 'lodash'
+d3 = require 'd3'
+format = require('./format').default
 {eventBus} = require('jsOAuth2/frontend/src/lib').default
 {Portfolio} = require('./model').default
 client = require('./mqtt').default
@@ -63,7 +79,20 @@ export default
     list: []
     tags: []
     order: []
+  computed:
+    sumTotal: ->
+      d3.sum @list, (quote) ->
+        quote.total
+    sumCurrTotal: ->
+      d3.sum @list, (quote) ->
+        quote.currTotal
+    sumDiffTotal: ->
+      d3.sum @list, (quote) ->
+        quote.diffTotal
+    sumDiffTotalPercent: ->
+      @sumDiffTotal * 100 / @sumTotal
   methods:
+    float: format.float
     sort: (prop, value) ->
       index = _.findIndex @order, prop
       if value
