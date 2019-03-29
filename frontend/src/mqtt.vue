@@ -1,17 +1,6 @@
 <script lang='coffee'>
-guid = require 'browserguid'
-store = require 'mqtt-level-store'
-{incoming, outgoing} = store 'db'
-mqtt = require 'mqtt'
-client = mqtt
-  .connect process.env.MQTTURL,
-    username: process.env.MQTTUSER
-    clientId: guid()
-    incomingStore: incoming
-    outgoingStore: outgoing
-    clean: false
-  .on 'connect', ->
-    client.subscribe "#{process.env.MQTTTOPIC.split('/')[0]}/#", qos: 2
+mqtt = require 'stockmqtt'
+client = mqtt()
 client.apply = (list) ->
   client.on 'message', (topic, msg) ->
     try
