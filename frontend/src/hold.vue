@@ -19,7 +19,10 @@
           <template v-slot:col2>
             <div>Quantity</div>
             <div>
-              <span>Price</span>/<span>Current</span>
+              Price
+              <order @sort="sort('price', $event)" />
+              /
+              Current
             </div>
           </template>
           <template v-slot:col3>
@@ -30,7 +33,10 @@
               PB
               <order @sort="sort('details.pb', $event)" />
             </div>
-            <div>Dividend</div>
+            <div>
+              Dividend
+              <order @sort="sort('details.dividend[1]', $event)" />
+            </div>
           </template>
           <template v-slot:col4>
             <div>
@@ -40,7 +46,10 @@
               Current
               <order @sort="sort('currTotal', $event)" />
             </div>
-            <div>P&ampL</div>
+            <div>
+              P&ampL
+              <order @sort="sort('diffPercent', $event)" />
+            </div>
           </template>
         </row>
         <holditem :class='{odd: index % 2 == 1}' v-for='(item, index) in list' :item='item' :key='item._id'/>
