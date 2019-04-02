@@ -11,7 +11,10 @@
               Symbol
               <order @sort="sort('symbol', $event)" />
             </div>
-            <div>Daily Change</div>
+            <div>
+              Daily Change
+              <order @sort="sort('quote.change[1]', $event)" />
+            </div>
           </template>
           <template v-slot:col2>
             <div>Quantity</div>
@@ -125,7 +128,6 @@ export default
   watch:
     order:
       handler: (after, before) ->
-        console.log JSON.stringify after
         compare = _.map @order, (obj) ->
           [prop, order] = Object.entries(obj)[0]
           (a, b) ->
