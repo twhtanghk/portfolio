@@ -37,7 +37,7 @@ class Portfolio extends Model
           item.symbol
         .rollup (group) ->
           txBuy = _.filter group, (item) ->
-            item.type == 'Buy'
+            (new RegExp 'buy', 'i').test item.type
           lastBuy = _.maxBy txBuy, 'createdAt'
           share = d3.sum group, quantity
           total = d3.sum group, (item) ->
@@ -45,7 +45,7 @@ class Portfolio extends Model
           return 
             name: group[0].name
             quantity: share
-            price: lastBuy.price
+            price: lastBuy?.price
             maxPrice: d3.max group, (item) ->
               if Portfolio.isSell item then 0 else item.price
         .entries collection
