@@ -37,7 +37,7 @@ class Portfolio extends Model
           item.symbol
         .rollup (group) ->
           txBuy = _.filter group, (item) ->
-            not Portfolio.isSell item
+            item.type == 'Buy'
           lastBuy = _.maxBy txBuy, 'createdAt'
           share = d3.sum group, quantity
           total = d3.sum group, (item) ->
