@@ -6,7 +6,7 @@
   "keywords": [],
   "dependencies": {},
   "scripts": {
-    "start": "node index.js",
+    "start": "coffee index.coffee",
     "test": "mocha test/bootstrap.coffee test/unit/**/*.coffee"
   },
   "main": "app.js",
