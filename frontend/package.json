@@ -21,7 +21,6 @@
     "compression-webpack-plugin": "^2.0.0",
     "d3": "^5.9.1",
     "jsOAuth2": "https://github.com/twhtanghk/jsOAuth2",
-    "mqtt-level-store": "^2.2.0",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
     "vue-async-computed": "^3.6.1",
