@@ -18,6 +18,8 @@ client.apply = (list) ->
           when 'aastocks'
             mergeQuote item, msg
             item.details = Object.assign item.details, msg.details
+            if item.details.dividend[3]?
+              item.details.dividend[3] = new Date item.details.dividend[3]
             item.name = msg.name
         item.diffTotal = item.currTotal - item.total
         item.diffPercent = item.diffTotal * 100 / item.total

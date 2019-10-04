@@ -7,7 +7,6 @@
             <div>
               Name
               <order @sort="sort('name', $event)" />
-              /
               Symbol
               <order @sort="sort('symbol', $event)" />
             </div>
@@ -17,11 +16,13 @@
             </div>
           </template>
           <template v-slot:col2>
-            <div>Quantity</div>
+            <div>
+              Quantity
+              <order @sort="sort('quantity', $event)" />
+            </div>
             <div>
               Price
               <order @sort="sort('price', $event)" />
-              /
               Current
             </div>
           </template>
@@ -29,20 +30,20 @@
             <div>
               PE
               <order @sort="sort('details.pe', $event)" />
-              /
               PB
               <order @sort="sort('details.pb', $event)" />
             </div>
             <div>
               Dividend
               <order @sort="sort('details.dividend[1]', $event)" />
+              Ex-date
+              <order @sort="sort('details.dividend[3]', $event)" />
             </div>
           </template>
           <template v-slot:col4>
             <div>
               Total
               <order @sort="sort('total', $event)" />
-              /
               Current
               <order @sort="sort('currTotal', $event)" />
             </div>

@@ -20,7 +20,6 @@ export default
       format: (data) ->
         ['date', 'updatedAt', 'createdAt'].map (name) =>
           data = @date data, name
-        data.details.dividend[2] = @date data.details.dividend[2]
         if data.quantity? and data.price?
           _.extend data, total: data.quantity * data.price
         _.extend data,
