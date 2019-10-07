@@ -1,11 +1,11 @@
 <template>
   <v-btn-toggle v-model='selected' @change='sort'>
-    <v-btn flat>
+    <v-btn text icon x-small>
       <v-icon>
         arrow_drop_up
       </v-icon>
     </v-btn>
-    <v-btn flat>
+    <v-btn text icon x-small>
       <v-icon>
         arrow_drop_down
       </v-icon>

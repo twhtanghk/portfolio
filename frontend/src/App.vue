@@ -3,7 +3,7 @@
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
     <toolbar />
     <!--alert /-->
-    <v-tabs fixed-tabs color='cyan' dark slider-color='yellow' @change='change'>
+    <v-tabs fixed-tabs color='cyan' slider-color='yellow' @change='change'>
       <v-tab>
         Hold
       </v-tab>

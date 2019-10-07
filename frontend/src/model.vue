@@ -32,7 +32,7 @@ export default
           details:
             pe: NaN
             pb: NaN
-            dividend: [NaN, NaN, '']
+            dividend: [NaN, NaN, null, '']
           currTotal: null
           diffTotal: null
           diffPercent: null
