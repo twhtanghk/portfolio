@@ -4,6 +4,7 @@
       <div>
         {{item.name}}
         <quote :symbol='item.symbol'/>
+        <chart :symbol='item.symbol'/>
       </div>
       <div :class='{profit: item.quote.change[0] > 0, loss: item.quote.change[0] < 0}'>
        {{float(item.quote.change[0])}} / {{float(item.quote.change[1])}}%
@@ -16,7 +17,7 @@
     <template v-slot:col3>
       <div v-if='item.details'>{{float(item.details.pe)}} / {{float(item.details.pb)}}</div>
       <div v-if='item.details && item.details.dividend && Array.isArray(item.details.dividend)'>
-        <a :href='item.details.dividend[3]' target='_blank'>
+        <a :href='item.details.dividend[2]' target='_blank'>
           {{float(item.details.dividend[0])}} / {{float(item.details.dividend[1])}}% / {{date(item.details.dividend[3])}}
         </a>
       </div>
@@ -40,6 +41,7 @@ export default
   components:
     row: require('./row').default
     quote: require('./quote').default
+    chart: require('./chart').default
   methods:
     date: format.date
     float: format.float

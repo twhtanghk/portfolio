@@ -31,7 +31,7 @@
     "vue.model": "https://github.com/twhtanghk/vue.model",
     "vue.oauth2": "https://github.com/twhtanghk/vue.oauth2",
     "vuelidate": "^0.7.4",
-    "vuetify": "^1.5.5"
+    "vuetify": "^2.1.1"
   },
   "babel": {
     "presets": [
