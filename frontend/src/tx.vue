@@ -1,5 +1,8 @@
 <template>
   <v-container fluid>
+    <v-btn color='primary' fixed fab bottom right @click='add'>
+      <v-icon>add</v-icon>
+    </v-btn>
     <v-layout column v-scroll='nextPage'>
       <v-flex xs12>
         <row class='portfolio-header'>
@@ -41,7 +44,17 @@ export default
     tags: []
     sort:
       date: 1
+    tx:
+      symbol: ''
+      type: 'Buy'
+      date: new Date.toISODateString()
+      quantity: 0
+      price: 0
+      notes: ''
+      tags: @tags
   methods:
+    add: ->
+      console.log 'add'
     nextPage: ->
       if document.documentElement.scrollTop + window.innerHeight == document.documentElement.offsetHeight
         @load @list.length
