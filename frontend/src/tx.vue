@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-btn color='primary' fixed fab bottom right @click='add'>
+    <v-btn color='primary' fixed fab bottom right @click='showAdd = true'>
       <v-icon>add</v-icon>
     </v-btn>
     <v-layout column v-scroll='nextPage'>
@@ -22,6 +22,38 @@
             <div>P&ampL</div>
           </template>
         </row>
+        <row v-if='showAdd'>
+          <template v-slot:col1>
+            <v-text-field v-model='tx.type' label='Type' />
+            <v-text-field v-model='tx.symbol' label='Symbol' />
+          </template>
+          <template v-slot:col2>
+            <v-text-field v-model='tx.quantity' label='Quantity' type='number'/>
+            <v-text-field v-model='tx.price' lable='Price' type='number' />
+          </template>
+          <template v-slot:col3>
+            <v-menu
+              v-model='menu'
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px">
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="tx.date"
+                  prepend-icon="event"
+                  readonly
+                  v-on="on" />
+              </template>
+            </v-menu>
+            <v-text-field v-model='tx.notes' label='Notes' />
+          </template>
+          <template v-slot:col4>
+            <v-btn @click='add'>Add</v-btn>
+            <v-btn @click='showAdd = false'>Cancel</v-btn>
+          </template>
+        </row>
         <txitem :class='{odd: index % 2 == 1}' v-for='(item, index) in list' :item='item' :key='item._id'/>
       </v-flex>
     </v-layout>
@@ -32,6 +64,7 @@
 {eventBus} = require('jsOAuth2/frontend/src/lib').default
 {Portfolio} = require('./model').default
 client = require('./mqtt').default
+{required, numeric, decimal} = require 'vuelidate/lib/validators'
 
 export default
   components:
@@ -47,14 +80,24 @@ export default
     tx:
       symbol: ''
       type: 'Buy'
-      date: new Date.toISODateString()
+      date: new Date().toISOString().substr(0, 10)
       quantity: 0
       price: 0
       notes: ''
-      tags: @tags
+      tags: []
+    menu: false
+    showAdd: false
+  validations:
+    'tx.symbol': {required, numeric}
+    'tx.quantity': {required, numeric}
+    'tx.price': {required, decimal}
   methods:
     add: ->
-      console.log 'add'
+      @tx.quantity = parseInt @tx.quantity
+      @tx.price = parseFloat @tx.price
+      @tx.tags = @tags
+      @list.unshift await Portfolio.create data: @tx
+      @showAdd = false
     nextPage: ->
       if document.documentElement.scrollTop + window.innerHeight == document.documentElement.offsetHeight
         @load @list.length
