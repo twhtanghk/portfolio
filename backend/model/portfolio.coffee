@@ -20,6 +20,10 @@ class Portfolio extends Model
   constructor: ->
     super()
 
+  create: (ctx, next) ->
+    ctx.request.body.date = new Date ctx.request.body.date
+    super ctx, next
+
   @isSell: (data) ->
     /^sell$/i.test data.type
 
