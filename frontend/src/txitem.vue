@@ -16,6 +16,7 @@
     </template>
     <template v-slot:col3>
       <div>{{item.tags}}</div>
+      <div>{{item.notes}}</div>
     </template>
     <template v-slot:col4>
       <div>{{float(item.total)}} / {{float(item.currTotal)}}</div>

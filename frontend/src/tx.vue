@@ -8,7 +8,7 @@
         <row class='portfolio-header'>
           <template v-slot:col1>
             <div>Name</div>
-            <div>Daily Change</div>
+            <div>Symbol</div>
           </template>
           <template v-slot:col2>
             <div>Quantity</div>
@@ -16,6 +16,7 @@
           </template>
           <template v-slot:col3>
             <div>Tag</div>
+            <div>Notes</div>
           </template>
           <template v-slot:col4>
             <div>Total</div>
