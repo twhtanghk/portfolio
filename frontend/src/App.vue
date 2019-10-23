@@ -3,20 +3,22 @@
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
     <toolbar />
     <!--alert /-->
-    <v-tabs fixed-tabs color='cyan' slider-color='yellow' @change='change'>
-      <v-tab>
-        Hold
-      </v-tab>
-      <v-tab>
-        TX
-      </v-tab> 
-      <v-tab-item>
-        <hold :tab='tab'/>
-      </v-tab-item>
-      <v-tab-item>
-        <tx :tab='tab'/>
-      </v-tab-item>
-    </v-tabs>
+    <v-content>
+      <v-tabs fixed-tabs color='cyan' slider-color='yellow' @change='change'>
+        <v-tab>
+          Hold
+        </v-tab>
+        <v-tab>
+          TX
+        </v-tab> 
+        <v-tab-item>
+          <hold :tab='tab'/>
+        </v-tab-item>
+        <v-tab-item>
+          <tx :tab='tab'/>
+        </v-tab-item>
+      </v-tabs>
+    <v-content>
   </v-app>
 </template>
 
