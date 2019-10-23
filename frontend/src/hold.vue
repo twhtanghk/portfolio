@@ -1,117 +1,171 @@
 <template>
-  <div>
-    <model ref='hold' :eventBus='eventBus' baseUrl='api/portfolio/hold' />
-    <b-table striped hover :items='list' :fields='fields'>
-      <template slot='symbol' slot-scope='data'>
-        <quote :symbol='data.value' />
-      </template>
-      <template slot='change' slot-scope='data'>
-        <span :class='style(data.value)'>{{float(data.value)}}</span>
-      </template>
-      <template slot='percent' slot-scope='data'>
-        <span :class='style(data.value)'>{{float(data.value)}}</span>
-      </template>
-      <template slot='bottom-row' slot-scope='data'>
-        <td :colspan='15'>
-          Total: {{float(sum.total)}} Change: {{float(sum.diffTotal)}} Percent: {{float(sum.percent)}}
-        </td>
-      </template>
-    </b-table>
-  </div>
+  <v-container fluid>
+    <v-layout column>
+      <v-flex>
+        <row class='portfolio-header'>
+          <template v-slot:col1>
+            <div>
+              Name
+              <order @sort="sort('name', $event)" />
+              Symbol
+              <order @sort="sort('symbol', $event)" />
+            </div>
+            <div>
+              Daily Change
+              <order @sort="sort('quote.change[1]', $event)" />
+            </div>
+          </template>
+          <template v-slot:col2>
+            <div>
+              Quantity
+              <order @sort="sort('quantity', $event)" />
+            </div>
+            <div>
+              Price
+              <order @sort="sort('price', $event)" />
+              Current / NAV
+            </div>
+          </template>
+          <template v-slot:col3>
+            <div>
+              PE
+              <order @sort="sort('details.pe', $event)" />
+              PB
+              <order @sort="sort('details.pb', $event)" />
+            </div>
+            <div>
+              Dividend
+              <order @sort="sort('details.dividend[1]', $event)" />
+              Ex-date
+              <order @sort="sort('details.dividend[3]', $event)" />
+            </div>
+          </template>
+          <template v-slot:col4>
+            <div>
+              Total
+              <order @sort="sort('total', $event)" />
+              Current
+              <order @sort="sort('currTotal', $event)" />
+            </div>
+            <div>
+              P&ampL
+              <order @sort="sort('diffPercent', $event)" />
+            </div>
+          </template>
+        </row>
+        <holditem :class='{odd: index % 2 == 1}' v-for='(item, index) in list' :item='item' :key='item._id'/>
+        <row class='portfolio-footer'>
+          <template v-slot:col4>
+            <div>
+              {{float(sumTotal)}}
+              /
+              {{float(sumCurrTotal)}}
+            </div>
+            <div>
+              {{float(sumDiffTotal)}}
+              /
+              {{float(sumDiffTotalPercent)}}%
+            </div>
+          </template>
+        </row>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script lang='coffee'>
 _ = require 'lodash'
 d3 = require 'd3'
-Vue = require('vue').default
-Vue.use require('bootstrap-vue').default
-eventBus = require('vue.oauth2/src/eventBus').default
-
 format = require('./format').default
+{eventBus} = require('jsOAuth2/frontend/src/lib').default
+{Portfolio} = require('./model').default
+client = require('./mqtt').default
 
-module.exports =
+export default
   components:
-    quote: require('./quote').default
-  props: [
-    'tags'
-  ]
+    holditem: require('./holditem').default
+    row: require('./row').default
+    order: require('./order').default
+  props:
+    tab: String
   data: ->
-    eventBus: eventBus
-    fields: [
-      { key: 'symbol', sortable: true }
-      { key: 'name', sortable: true }
-      { key: 'quantity', sortable: true, formatter: @float }
-      { key: 'cost', sortable: false, formatter: @float }
-      { key: 'price', sortable: false, formatter: @float }
-      { key: 'maxPrice', sortable: false, formatter: @float }
-      { key: 'avgPrice', sortable: false, formatter: @float }
-      { key: 'marketPrice', sortable: false, formatter: @float }
-      { key: 'div', sortable: true, formatter: @float }
-      { key: 'yield', sortable: true, formatter: @float }
-      { key: 'exDivDate', sortable: true, formatter: format.date }
-      { key: 'pe', label: 'PE', sortable: true, formatter: @float }
-      { key: 'total', sortable: true, formatter: @float }
-      { key: 'change', sortable: true }
-      { key: 'percent', sortable: true }
-    ]
-  methods:
-    style: (val) ->
-      if val >= 0 then 'profit' else 'loss'
-    float: format.float
-    format: (item) ->
-      avgPrice = item.price / item.quantity
-      cost =  avgPrice * item.quantity
-      curr = item.marketPrice * item.quantity
-      diff = curr - cost
-      symbol: item.symbol
-      name: item.name
-      quantity: item.quantity
-      cost: cost
-      total: curr
-      change: diff
-      percent: (diff / cost) * 100
-      marketPrice: item.marketPrice
-      maxPrice: item.maxPrice
-      avgPrice: avgPrice
-      price: item.price
-      div: item.dividend.rate
-      yield: item.dividend.yield * 100
-      exDivDate: item.dividend.exdate
-      pe: item.pe
+    list: []
+    tags: []
+    order: []
   computed:
-    opts: ->
-      ret =
-        data:
-          type:
-            '!': null
-      if @tags.length != 0
-        ret.data.or = @tags?.map (tag) ->
-          tags:
-            contains: tag
-      ret
-    sum: ->
-      ret =
-        total: 0
-        diffTotal: 0
-        percent: 0
-      @list?.map (item) ->
-        ret.total += item.total
-        ret.diffTotal += item.change
-      _.extend ret, percent: if ret.total != 0 then 100 * ret.diffTotal / ret.total else 0
-  asyncComputed:
-    list: ->
-      opts = @opts
-      res = await @$refs.hold?.list opts
-      res?.map (item) =>
-        @format item
+    sumTotal: ->
+      d3.sum @list, (quote) ->
+        quote.total
+    sumCurrTotal: ->
+      d3.sum @list, (quote) ->
+        quote.currTotal
+    sumDiffTotal: ->
+      d3.sum @list, (quote) ->
+        quote.diffTotal
+    sumDiffTotalPercent: ->
+      @sumDiffTotal * 100 / @sumTotal
+  methods:
+    float: format.float
+    sort: (prop, value) ->
+      index = _.findIndex @order, prop
+      if value
+        if index != -1
+          @order[index][prop] = value
+        else
+          ret = {}
+          ret[prop] = value
+          @order.push ret
+      else
+        @order.splice index, 1
+    reload: ->
+      try
+        @list.splice 0, @list.length
+        data = sort:
+          date: 1
+        if @tags.length
+          data.tags = $in: @tags
+        res = await Portfolio.get
+          url: "#{Portfolio.baseUrl}/hold"
+          data: data
+        for i in res
+          @list.push i
+        client.publish process.env.MQTTTOPIC, JSON.stringify
+          action: 'subscribe'
+          data: _.map res, (item) ->
+            parseInt item.symbol
+      catch err
+        console.error err.toString()
+  watch:
+    order:
+      handler: (after, before) ->
+        compare = _.map @order, (obj) ->
+          [prop, order] = Object.entries(obj)[0]
+          (a, b) ->
+            order * (_.get(a, prop) - _.get(b, prop))
+        @list.sort (a, b) ->
+          for i in compare
+            ret = i(a, b)
+            if ret != 0
+              return ret
+          return 0
+      deep: true
+    tab: (newtab, oldtab) ->
+      if newtab == 'hold'
+        @reload()
+    tags: (newtags, oldtags) ->
+      if @tab == 'hold'
+        @reload()
+  created: ->
+    client.apply @list
+    eventBus
+      .$on 'tags.changed', ({tags}) =>
+        @tags.splice 0, @tags.length
+        for i in tags
+          @tags.push i
 </script>
 
-<style>
-.profit {
-  color: green;
-}
-
-.loss {
-  color: red;
+<style lang='scss' scoped>
+.portfolio-header * {
+  vertical-align: middle;
 }
 </style>

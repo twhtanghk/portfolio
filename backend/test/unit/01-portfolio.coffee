@@ -1,88 +1,80 @@
 req = require 'supertest'
-path = require 'path'
-co = require 'co'
 
-describe 'Portfolio Controller', ->
-  id = null
+describe 'Portfolio', ->
   token = null
 
-  before -> co ->
-    {CLIENT_ID, CLIENT_SECRET, USER_ID, USER_SECRET} = process.env
-    opts =
-      url: sails.config.oauth2.url
-      grant_type: 'password'
-      client:
-        id: CLIENT_ID
-        secret: CLIENT_SECRET
-      user:
-        id: USER_ID
-        secret: USER_SECRET
-      scope: ['User']
-    token = yield sails.config.oauth2.getToken opts
-
-  it 'create', ->
-    req sails.hooks.http.app
-      .post '/api/portfolio'
-      .set 'Authorization', "Bearer #{token}"
-      .set 'Content-Type', 'application/json'
-      .send
-        symbol: '1132'
-        name: 'orange sky'
-        type: 'Buy'
-        quantity: 1000
-        price: 0.63
-      .expect 201
+  before ->
+    {CLIENT_ID, CLIENT_SECRET, USER_ID, USER_SECRET, TOKEN_URL} = process.env
+    require 'superagent'
+      .post TOKEN_URL
+      .auth process.env.CLIENT_ID, process.env.CLIENT_SECRET
+      .set 'Content-Type', 'application/x-www-form-urlencoded'
+      .send 
+        grant_type: 'password'
+        username: process.env.USER_ID
+        password: process.env.USER_SECRET
+        scope: ''
       .then (res) ->
-        id = res.body.id
+        token = res.body.access_token
+        console.log token
+      .catch ({response}) ->
+        console.error response.error.text
+        throw response.error.text
 
   it 'list', ->
-    req sails.hooks.http.app
+    req global.server
       .get '/api/portfolio'
       .set 'Authorization', "Bearer #{token}"
       .set 'Content-Type', 'application/json'
       .expect 200
+      .then (res) ->
+        console.log res.body
 
-  it 'count', ->
-    req sails.hooks.http.app
-      .get '/api/portfolio/count'
+  it 'list for tags', ->
+    req global.server
+      .post '/api/portfolio'
+      .set 'X-HTTP-Method-Override', 'GET'
+      .set 'Authorization', "Bearer #{token}"
+      .set 'Content-Type', 'application/json'
+      .send 
+        tags: $in: ['IB', 'cheung']
+        skip: 1
+        limit: 100
+        sort:
+          symbol: -1
+          quantity: 1
+      .expect 200
+      .then (res) ->
+        console.log res.body
+
+  it 'hold', ->
+    req global.server
+      .get '/api/portfolio/hold'
       .set 'Authorization', "Bearer #{token}"
       .set 'Content-Type', 'application/json'
       .expect 200
+      .then (res) ->
+        console.log res.body
 
-  it 'update', ->
-    req sails.hooks.http.app
-      .put "/api/portfolio/#{id}"
+  it 'hold for specific tags', ->
+    req global.server
+      .post '/api/portfolio/hold'
+      .set 'X-HTTP-Method-Override', 'GET'
       .set 'Authorization', "Bearer #{token}"
       .set 'Content-Type', 'application/json'
-      .send
-        price: 0.55
+      .send 
+        tags: $in: ['IB', 'cheung']
+        sort:
+          symbol: -1
       .expect 200
-
-  it 'delete', ->
-    req sails.hooks.http.app
-      .delete "/api/portfolio/#{id}"
-      .set 'Authorization', "Bearer #{token}"
-      .set 'Content-Type', 'application/json'
-      .expect 200
+      .then (res) ->
+        console.log res.body
 
   it 'tags', ->
-    req sails.hooks.http.app
+    req global.server
       .get '/api/portfolio/tags'
       .set 'Authorization', "Bearer #{token}"
       .set 'Content-Type', 'application/json'
       .expect 200
-
-  it 'onhold', ->
-    req sails.hooks.http.app
-      .get '/api/portfolio/onhold'
-      .set 'Authorization', "Bearer #{token}"
-      .set 'Content-Type', 'application/json'
-      .expect 200
-
-  it 'import', ->
-    req sails.hooks.http.app
-      .post '/api/portfolio/upload'
-      .set 'Authorization', "Bearer #{token}"
-      .field 'tag', 'test'
-      .attach 'files', path.join(__dirname, '../data/test.csv')
-      .expect 201
+      .then (res) ->
+        console.log res.body

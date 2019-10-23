@@ -9,5 +9,5 @@ module.exports =
   ]
   computed:
     url: ->
-      "https://hk.finance.yahoo.com/quote/#{@symbol}.HK"
+      "http://www.aastocks.com/tc/stocks/quote/detail-quote.aspx?symbol=0#{@symbol}"
 </script>

@@ -2,21 +2,12 @@
   "name": "portfolio",
   "private": true,
   "version": "0.0.0",
-  "description": "a Sails application",
+  "description": "keep track portfolio data",
   "keywords": [],
-  "dependencies": {
-    "activerecord-model": "0.0.11",
-    "bluebird": "^3.5.1",
-    "include-all": "^1.0.0",
-    "rc": "1.0.1",
-    "sails": "^0.12.14",
-    "sails-mongo": "^0.12.2",
-    "sails_policy": "0.0.3"
-  },
+  "dependencies": {},
   "scripts": {
-    "debug": "node debug app.js",
-    "start": "node app.js --prod",
-    "test": "NODE_ENV=production mocha test/bootstrap.coffee test/unit/*.coffee"
+    "start": "coffee index.coffee",
+    "test": "mocha test/bootstrap.coffee test/unit/**/*.coffee"
   },
   "main": "app.js",
   "repository": {
@@ -26,13 +17,25 @@
   "author": "anonymous node/sails user",
   "license": "",
   "devDependencies": {
-    "coffee-script": "^1.12.7",
-    "coffeescript": "^2.2.3",
-    "csv": "^2.0.0",
-    "d3": "^5.0.0",
-    "mocha": "^5.0.4",
-    "sails-hook-requestlogger-file": "^2.0.5",
-    "supertest": "^3.0.0",
-    "yahoo-finance": "^0.3.5"
+    "@koa/cors": "^2.2.3",
+    "bluebird": "^3.5.3",
+    "coffeescript": "^2.3.2",
+    "d3": "^5.9.1",
+    "jsOAuth2": "https://github.com/twhtanghk/jsOAuth2",
+    "koa": "^2.7.0",
+    "koa-404-handler": "^0.0.2",
+    "koa-better-error-handler": "^1.3.6",
+    "koa-bodyparser": "^4.2.1",
+    "koa-compose": "^4.1.0",
+    "koa-logger": "^3.2.0",
+    "koa-methodoverride": "^2.0.0",
+    "koa-passport": "^4.1.1",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "mocha": "^6.0.2",
+    "monk": "^6.0.6",
+    "needle": "^2.2.4",
+    "passport-http-bearer": "^1.0.1",
+    "supertest": "^3.4.2"
   }
 }
