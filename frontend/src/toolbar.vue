@@ -5,9 +5,6 @@
     </v-toolbar-title>
     <v-spacer />
     <tags />
-    <v-btn fab dark color='primary' @click.stop.prevent='create'>
-      <v-icon dark>add</v-icon>
-    </v-btn>
   </v-app-bar>
 </template>
 
