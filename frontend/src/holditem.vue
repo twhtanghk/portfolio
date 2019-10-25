@@ -12,7 +12,14 @@
     </template>
     <template v-slot:col2>
       <div>{{float(item.quantity)}}</div>
-      <div>{{float(item.price)}} / {{float(item.quote.curr)}} / {{float(item.stopLoss}} / {{float(item.details.nav)}}</div>
+      <div>
+        <span>{{float(item.price)}}</span> /
+        <span>{{float(item.quote.curr)}}</span> / 
+        <span :class='{profit: item.stopLoss >=item.price, loss: item.stopLoss < item.price}'>
+          {{float(item.stopLoss)}}
+        </span> / 
+        <span>{{float(item.details.nav)}}</span>
+      </div>
     </template>
     <template v-slot:col3>
       <div v-if='item.details'>{{float(item.details.pe)}} / {{float(item.details.pb)}}</div>
