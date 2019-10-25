@@ -12,7 +12,7 @@
     </template>
     <template v-slot:col2>
       <div>{{float(item.quantity)}}</div>
-      <div>{{float(item.price)}} / {{float(item.quote.curr)}} / {{float(item.details.nav)}}</div>
+      <div>{{float(item.price)}} / {{float(item.quote.curr)}} / {{float(item.stopLoss}} / {{float(item.details.nav)}}</div>
     </template>
     <template v-slot:col3>
       <div v-if='item.details'>{{float(item.details.pe)}} / {{float(item.details.pb)}}</div>

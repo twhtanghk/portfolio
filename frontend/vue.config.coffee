@@ -32,6 +32,7 @@ module.exports =
       'MQTTURL'
       'MQTTUSER'
       'MQTTTOPIC'
+      'STOPLOSS'
     ]
     config.module.rules.push
       test: /\.coffee$/
