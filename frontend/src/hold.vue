@@ -23,7 +23,7 @@
             <div>
               Price
               <order @sort="sort('price', $event)" />
-              Current / NAV
+              Current / Stoploss / NAV
             </div>
           </template>
           <template v-slot:col3>

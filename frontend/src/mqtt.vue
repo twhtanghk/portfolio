@@ -10,6 +10,7 @@ client.apply = (list) ->
     mergeQuote = (item, msg) ->
       item.quote = Object.assign item.quote, msg.quote
       item.currTotal = item.quote.curr * item.quantity
+      item.stopLoss = parseFloat(process.env.STOPLOSS) * Math.max item.price, item.quote.curr
     for item in list
       if msg.symbol == parseInt item.symbol
         switch msg.src
