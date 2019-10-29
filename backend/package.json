@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "description": "keep track portfolio data",
   "keywords": [],
-  "dependencies": {},
+  "dependencies": {
+    "mqtt": "^3.0.0"
+  },
   "scripts": {
     "start": "coffee index.coffee",
     "test": "mocha test/bootstrap.coffee test/unit/**/*.coffee"
