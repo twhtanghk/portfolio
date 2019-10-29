@@ -22,7 +22,7 @@ class Hsi extends Model
         client.subscribe "#{process.env.MQTTTOPIC}/#", qos: 2
         console.debug 'mqtt connected'
       .on 'message', (topic, msg) =>
-        if topic == '#{process.env.MQTTTOPIC/hsi"
+        if topic == "#{process.env.MQTTTOPIC}/hsi"
           try
             msg = JSON.parse msg.toString()
             @model.insert msg
