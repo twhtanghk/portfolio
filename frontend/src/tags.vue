@@ -9,7 +9,7 @@
 
 <script lang='coffee'>
 {Portfolio} = require('./model').default
-{eventBus} = require('jsOAuth2/frontend/src/lib').default
+eventBus = require('./eventBus').default
 
 export default
   data: ->

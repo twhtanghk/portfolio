@@ -1,7 +1,7 @@
 <script lang='coffee'>
 Vue = require('vue').default
 Vue.use require('vue.model/src/plugin').default
-{eventBus} = require('jsOAuth2/frontend/src/lib').default
+eventBus = require('./eventBus').default
 
 export default
   Portfolio: new Vue

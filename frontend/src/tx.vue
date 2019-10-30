@@ -62,7 +62,7 @@
 </template>
 
 <script lang='coffee'>
-{eventBus} = require('jsOAuth2/frontend/src/lib').default
+eventBus = require('./eventBus').default
 {Portfolio} = require('./model').default
 client = require('./mqtt').default
 {required, numeric, decimal} = require 'vuelidate/lib/validators'
