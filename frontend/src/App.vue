@@ -36,7 +36,6 @@ export default
     tx: require('./tx').default
     hold: require('./hold').default
     toolbar: require('./toolbar').default
-#    alert: require('jsOAuth2/frontend/src/alert').default
   data: ->
     oauth2:
       url: process.env.AUTH_URL
