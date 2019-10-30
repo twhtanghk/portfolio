@@ -29,14 +29,13 @@ Vue.use require 'vuetify'
 Vue.use require('vuelidate').default
 Vue.use require('bootstrap-vue').default
 Vue.use require('vue.oauth2/src/plugin').default
-{eventBus} = require('jsOAuth2/frontend/src/lib').default
+eventBus = require('./eventBus').default
 
 export default
   components:
     tx: require('./tx').default
     hold: require('./hold').default
     toolbar: require('./toolbar').default
-#    alert: require('jsOAuth2/frontend/src/alert').default
   data: ->
     oauth2:
       url: process.env.AUTH_URL

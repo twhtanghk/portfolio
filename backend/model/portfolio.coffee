@@ -1,6 +1,6 @@
 _ = require 'lodash'
 d3 = require 'd3'
-Model = require 'jsOAuth2/backend/model/model'
+Model = require 'koamodel'
 
 class Portfolio extends Model
   name: 'portfolio'

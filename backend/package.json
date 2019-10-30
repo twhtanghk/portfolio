@@ -5,6 +5,7 @@
   "description": "keep track portfolio data",
   "keywords": [],
   "dependencies": {
+    "koamodel": "https://github.com/twhtanghk/koamodel",
     "mqtt": "^3.0.0"
   },
   "scripts": {
@@ -23,7 +24,6 @@
     "bluebird": "^3.7.1",
     "coffeescript": "^2.4.1",
     "d3": "^5.12.0",
-    "jsOAuth2": "https://github.com/twhtanghk/jsOAuth2",
     "koa": "^2.11.0",
     "koa-404-handler": "^0.0.2",
     "koa-better-error-handler": "^3.0.3",

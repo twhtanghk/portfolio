@@ -1,4 +1,4 @@
-Model = require 'jsOAuth2/backend/model/model'
+Model = require 'koamodel'
 
 class Hsi extends Model
   name: 'hsi'
@@ -28,5 +28,19 @@ class Hsi extends Model
             @model.insert msg
           catch err
             console.error err
+
+  ad: ->
+    @model.aggregate [
+      $group: 
+        _id: 
+          createdAt: 
+            $dateToString: 
+              format: "%Y%m%d"
+              date: "$createdAt"
+        up: 
+          $sum: $cond: [ $gte: ["$change", 0], 1, 0 ]
+        down: 
+          $sum: $cond: [ $lt: ["$change", 0], 1, 0 ]
+    ]
 
 module.exports = new Hsi()

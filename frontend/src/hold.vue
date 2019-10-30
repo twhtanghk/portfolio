@@ -77,7 +77,7 @@
 _ = require 'lodash'
 d3 = require 'd3'
 format = require('./format').default
-{eventBus} = require('jsOAuth2/frontend/src/lib').default
+eventBus = require('./eventBus').default
 {Portfolio} = require('./model').default
 client = require('./mqtt').default
 

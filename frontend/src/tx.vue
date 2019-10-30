@@ -30,7 +30,7 @@
           </template>
           <template v-slot:col2>
             <v-text-field v-model='tx.quantity' label='Quantity' type='number'/>
-            <v-text-field v-model='tx.price' lable='Price' type='number' />
+            <v-text-field v-model='tx.price' label='Price' type='number' />
           </template>
           <template v-slot:col3>
             <v-menu
@@ -44,9 +44,11 @@
                 <v-text-field
                   v-model="tx.date"
                   prepend-icon="event"
+                  label='Date'
                   readonly
                   v-on="on" />
               </template>
+              <v-date-picker v-model="tx.date" no-title @input="menu = false"/>
             </v-menu>
             <v-text-field v-model='tx.notes' label='Notes' />
           </template>
@@ -62,7 +64,7 @@
 </template>
 
 <script lang='coffee'>
-{eventBus} = require('jsOAuth2/frontend/src/lib').default
+eventBus = require('./eventBus').default
 {Portfolio} = require('./model').default
 client = require('./mqtt').default
 {required, numeric, decimal} = require 'vuelidate/lib/validators'

@@ -8,23 +8,26 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@mdi/font": "^4.5.95",
     "stockmqtt": "https://github.com/twhtanghk/stockMqtt",
     "vue": "^2.6.7"
   },
+  "resolutions": {
+    "svgo": "1.3.0"
+  },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.4.1",
-    "@vue/cli-service": "^3.4.1",
+    "@vue/cli-plugin-babel": "^4.0.5",
+    "@vue/cli-service": "^4.0.5",
     "bootstrap-vue": "^2.0.0-rc.14",
     "browserguid": "https://github.com/twhtanghk/browserGuid",
     "coffee-loader": "^0.9.0",
     "coffeescript": "^2.3.2",
-    "compression-webpack-plugin": "^2.0.0",
+    "compression-webpack-plugin": "^3.0.0",
     "d3": "^5.9.1",
-    "jsOAuth2": "https://github.com/twhtanghk/jsOAuth2",
     "node-sass": "^4.11.0",
-    "sass-loader": "^7.1.0",
+    "sass-loader": "^8.0.0",
     "vue-async-computed": "^3.6.1",
-    "vue-context": "^3.4.0",
+    "vue-context": "^4.1.1",
     "vue-fab": "https://github.com/twhtanghk/vue-fab",
     "vue-multiselect": "^2.1.3",
     "vue-template-compiler": "^2.6.7",

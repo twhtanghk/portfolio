@@ -9,12 +9,9 @@
 </template>
 
 <script lang='coffee'>
-{eventBus} = require('jsOAuth2/frontend/src/lib').default
+eventBus = require('./eventBus').default
 
 export default
   components:
     tags: require('./tags').default
-  methods:
-    create: ->
-      eventBus.$emit 'tx.add'
 </script>
