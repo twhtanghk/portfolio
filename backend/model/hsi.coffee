@@ -1,4 +1,4 @@
-Model = require 'jsOAuth2/backend/model/model'
+Model = require 'koamodel'
 
 class Hsi extends Model
   name: 'hsi'

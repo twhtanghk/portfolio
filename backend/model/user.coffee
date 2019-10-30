@@ -1,4 +1,4 @@
-Model = require 'jsOAuth2/backend/model/model'
+Model = require 'koamodel'
 
 class User extends Model
   name: 'user'
