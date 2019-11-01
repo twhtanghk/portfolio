@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
+    <drawer />
     <toolbar />
     <!--alert /-->
     <v-content>
@@ -35,6 +36,7 @@ export default
   components:
     tx: require('./tx').default
     hold: require('./hold').default
+    drawer: require('./drawer').default
     toolbar: require('./toolbar').default
   data: ->
     oauth2:
