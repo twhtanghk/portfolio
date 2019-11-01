@@ -13,6 +13,13 @@ app.context.onerror = require 'koa-better-error-handler'
 app.keys = process.env.KEYS?.split(',') || ['keep it secret']
 module.exports = new Promise (resolve, reject) ->
   server = app
+    .use (ctx, next) ->
+      try
+        await next()
+      catch err
+        ctx.status = err.status || 500
+        ctx.body = err.message
+        ctx.app.emit 'error', err, ctx
     .use logger()
     .use require 'koa-404-handler'
     .use bodyParser()
@@ -26,3 +33,4 @@ module.exports = new Promise (resolve, reject) ->
       if err?
         return reject err
       resolve server
+    .on 'error', console.error
