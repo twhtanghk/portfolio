@@ -4,6 +4,14 @@ Vue.use require('vue.model/src/plugin').default
 eventBus = require('./eventBus').default
 
 export default
+  Hsi: new Vue
+    extends: Vue.component 'model'
+    props:
+      baseUrl:
+        default: "#{process.env.API_URL}/api/hsi"
+    methods:
+      ad: ->
+        await @get url: "#{@baseUrl}/ad"
   Portfolio: new Vue
     extends: Vue.component 'model'
     props:
