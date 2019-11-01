@@ -29,18 +29,28 @@ class Hsi extends Model
           catch err
             console.error err
 
-  ad: ->
-    @model.aggregate [
-      $group: 
-        _id: 
-          createdAt: 
+  ad: (ctx, next) ->
+    ctx.response.body = await @model.aggregate [
+      {
+        $group: 
+          _id: 
             $dateToString: 
               format: "%Y%m%d"
               date: "$createdAt"
-        up: 
-          $sum: $cond: [ $gte: ["$change", 0], 1, 0 ]
-        down: 
-          $sum: $cond: [ $lt: ["$change", 0], 1, 0 ]
+          up: 
+            $sum: $cond: [ $gte: ["$change", 0], 1, 0 ]
+          down: 
+             $sum: $cond: [ $lt: ["$change", 0], 1, 0 ]
+      }
+      {
+        $addFields:
+          diff:
+            $subtract: [ "$up", "$down" ]
+      }
+      {
+        $sort:
+          _id: 1
+      }
     ]
 
 module.exports = new Hsi()

@@ -12,6 +12,7 @@ portfolio = require './model/portfolio'
 hsi = require './model/hsi'
   .actions [
     'find'
+    'ad'
   ]
 
 isAuthenticated = require './policy/isAuthenticated'
@@ -26,3 +27,4 @@ module.exports = router
   .put '/api/portfolio/:id', isAuthenticated, isOwner, portfolio.update
   .delete '/api/portfolio/:id', isAuthenticated, isOwner, portfolio.destroy
   .get '/api/hsi', hsi.find
+  .get '/api/hsi/ad', hsi.ad
