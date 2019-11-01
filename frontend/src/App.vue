@@ -1,23 +1,11 @@
 <template>
   <v-app>
     <authForm :eventBus='eventBus' :oauth2='oauth2' />
+    <drawer />
     <toolbar />
     <!--alert /-->
     <v-content>
-      <v-tabs fixed-tabs color='cyan' slider-color='yellow' @change='change'>
-        <v-tab>
-          Hold
-        </v-tab>
-        <v-tab>
-          TX
-        </v-tab> 
-        <v-tab-item>
-          <hold :tab='tab'/>
-        </v-tab-item>
-        <v-tab-item>
-          <tx :tab='tab'/>
-        </v-tab-item>
-      </v-tabs>
+      <v-component :is='content' />
     <v-content>
   </v-app>
 </template>
@@ -35,18 +23,21 @@ export default
   components:
     tx: require('./tx').default
     hold: require('./hold').default
+    drawer: require('./drawer').default
     toolbar: require('./toolbar').default
+    portfolio: require('./portfolio').default
+    hsi: require('./hsi').default
   data: ->
     oauth2:
       url: process.env.AUTH_URL
       client: process.env.CLIENT_ID
       scope: 'User'
       response_type: 'token'
+    content: 'portfolio'
     eventBus: eventBus
-    tab: 'hold'
-  methods:
-    change: (tab) ->
-      @tab = ['hold', 'tx'][tab]
+  created: ->
+    eventBus.$on 'content', (page) =>
+      @content = page
 </script>
 
 <style lang='scss'>
