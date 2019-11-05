@@ -30,7 +30,12 @@ class Sector extends Model
             console.error err
 
   ad: (ctx, next) ->
+    sector = ctx.params.sector
     ctx.response.body = await @model.aggregate [
+      {
+        $match:
+          sector: sector
+      }
       {
         $group: 
           _id: 
