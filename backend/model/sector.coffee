@@ -1,7 +1,7 @@
 Model = require 'koamodel'
 
-class Hsi extends Model
-  name: 'hsi'
+class Sector extends Model
+  name: 'sector'
 
   attributes: [
     'symbol'
@@ -22,7 +22,7 @@ class Hsi extends Model
         client.subscribe "#{process.env.MQTTTOPIC}/#", qos: 2
         console.debug 'mqtt connected'
       .on 'message', (topic, msg) =>
-        if topic == "#{process.env.MQTTTOPIC}/hsi"
+        if topic == "#{process.env.MQTTTOPIC}/sector"
           try
             msg = JSON.parse msg.toString()
             @model.insert msg
@@ -53,4 +53,4 @@ class Hsi extends Model
       }
     ]
 
-module.exports = new Hsi()
+module.exports = new Sector()

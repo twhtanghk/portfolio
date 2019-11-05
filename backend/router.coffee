@@ -9,7 +9,7 @@ portfolio = require './model/portfolio'
     'update'
     'destroy'
   ]
-hsi = require './model/hsi'
+sector = require './model/sector'
   .actions [
     'find'
     'ad'
@@ -26,5 +26,5 @@ module.exports = router
   .post '/api/portfolio', isAuthenticated, setCreatedBy, portfolio.create
   .put '/api/portfolio/:id', isAuthenticated, isOwner, portfolio.update
   .delete '/api/portfolio/:id', isAuthenticated, isOwner, portfolio.destroy
-  .get '/api/hsi', hsi.find
-  .get '/api/hsi/ad', hsi.ad
+  .get '/api/sector', sector.find
+  .get '/api/sector/:sector/ad', sector.ad
