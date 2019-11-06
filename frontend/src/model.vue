@@ -10,7 +10,7 @@ export default
       baseUrl:
         default: "#{process.env.API_URL}/api/sector"
     methods:
-      get: (opts) ->
+      ad: (opts) ->
         {data} = opts
         await @get url: "#{@baseUrl}/#{data.sector}/ad"
   Portfolio: new Vue

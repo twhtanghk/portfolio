@@ -1,5 +1,12 @@
 <template>
-  <div>{{ ad }}</div>
+  <div>
+    <div v-for='(data, sector) in ad'>
+      {{sector}}:
+      <div v-for='row in data'>
+        {{row}}
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang='coffee'>
@@ -7,21 +14,19 @@
 
 export default
   data: ->
-    ad: {}
+    ad: 
+      HSI: []
+      material: []
+      communication: []
+      consumerDiscretionary: []
+      consumerStaples: []
+      energy: []
+      financial: []
+      healthcare: []
+      industrial: []
+      IT: []
   created: ->
-    sectors = [
-      'HSI'
-      'material'
-      'communication'
-      'consumerDiscretionary'
-      'consumerStaples'
-      'energy'
-      'financial'
-      'healthcare'
-      'industrial'
-      'IT'
-    ]
-    for sector in sectors
-      @ad = _.extend @ad, 
-        sector: JSON.stringify await Sector.ad data: sector: sector
+    for sector, data of @ad
+      @ad[sector] = await Sector.ad data: sector: sector
+      console.log @ad
 </script>
