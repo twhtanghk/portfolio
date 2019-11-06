@@ -28,5 +28,4 @@ export default
   created: ->
     for sector, data of @ad
       @ad[sector] = await Sector.ad data: sector: sector
-      console.log @ad
 </script>
