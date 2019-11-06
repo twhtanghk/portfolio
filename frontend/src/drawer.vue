@@ -12,12 +12,12 @@
           <v-list-item-title>Portfolio</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item link @click.stop='content("hsi")'>
+      <v-list-item link @click.stop='content("sector")'>
         <v-list-item-action>
           <v-icon>mdi-chart-line</v-icon>
         </v-list-item-action>
         <v-list-item-content>
-          <v-list-item-title>HSI AD Line</v-list-item-title>
+          <v-list-item-title>AD Line</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>

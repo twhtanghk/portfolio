@@ -26,7 +26,7 @@ export default
     drawer: require('./drawer').default
     toolbar: require('./toolbar').default
     portfolio: require('./portfolio').default
-    hsi: require('./hsi').default
+    sector: require('./sector').default
   data: ->
     oauth2:
       url: process.env.AUTH_URL
