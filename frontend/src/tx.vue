@@ -10,11 +10,29 @@
       fixed-header
       hide-default-footer
     >
+      <template v-slot:item.symbol="{ item }">
+        <quote :symbol='item.symbol'/>
+        <chart :symbol='item.symbol'/>
+      </template>
       <template v-slot:item.date="{ item }">
         <span>{{date(item.date)}}</span>
       </template>
       <template v-slot:item.total="{ item }">
-        <span>{{float(item.total)}}</span>
+        <span>{{float(item.total)}} / {{float(item.currTotal)}}</span>
+      </template>
+      <template v-slot:item.diffTotal="{ item }">
+        <span :class='{profit: item.diffTotal > 0, loss: item.diffTotal < 0}'>
+          {{float(item.diffTotal)}} / {{float(item.diffPercent)}}%
+        </span>
+      </template>
+      <template v-slot:footer>
+        <v-progress-circular indeterminate color='primary'
+          v-if='! finished'
+          v-intersect='next' />
+        Total:
+        <span :class='{profit: summary().pl > 0, loss: summary().pl < 0}'>
+          {{ float(summary().pl) }}
+        </span>
       </template>
     </v-data-table>
   </v-container>
@@ -29,14 +47,14 @@ client = require('./mqtt').default
 
 export default
   components:
-    txitem: require('./txitem').default
-    row: require('./row').default
+    quote: require('./quote').default
+    chart: require('./chart').default
   props:
     tab: String
   data: ->
     headers: [
-      { text: 'Name', value: 'name' }
       { text: 'Symbol', value: 'symbol' }
+      { text: 'Name', value: 'name' }
       { text: 'Quantity', value: 'quantity' }
       { text: 'Type', value: 'type' }
       { text: 'Price', value: 'price' }
@@ -46,6 +64,7 @@ export default
       { text: 'Total', value: 'total' }
       { text: 'P&L', value: 'diffTotal' }
     ] 
+    finished: false
     list: []
     tags: []
     sort:
@@ -59,7 +78,6 @@ export default
       notes: ''
       tags: []
     menu: false
-    showAdd: false
   validations:
     'tx.symbol': {required, numeric}
     'tx.quantity': {required, numeric}
@@ -72,13 +90,13 @@ export default
       @tx.price = parseFloat @tx.price
       @tx.tags = @tags
       @list.unshift await Portfolio.create data: @tx
-      @showAdd = false
-    nextPage: ->
-      if document.documentElement.scrollTop + window.innerHeight == document.documentElement.offsetHeight
-        @load @list.length
+    next: (entries) ->
+      if entries[0].isIntersecting
+        @finished = 0 == await @load @list.length
+    clear: ->
+      @list.splice 0, @list.length
+      @finished = false
     load: (skip = 0) ->
-      if skip == 0
-        @list.splice 0, @list.length
       try
         data =
           sort: @sort
@@ -88,17 +106,23 @@ export default
         res = await Portfolio.get data: data
         for i in res
           @list.push i
+        client.apply @list
+        return res.length
       catch err
         console.error err.toString()
+    summary: ->
+      reducer = (result, tx) ->
+        result.pl += tx.diffTotal
+        result
+      @list.reduce reducer, pl: 0
   watch:
     tab: (newtab, oldtab) ->
       if newtab == 'tx'
-        @load()
+        @clear()
     tags: (newtags, oldtags) ->
       if @tab == 'tx'
-        @load()
+        @clear()
   created: ->
-    client.apply @list
     eventBus
       .$on 'tags.changed', ({tags}) =>
         @tags.splice 0, @tags.length
