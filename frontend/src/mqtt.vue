@@ -2,6 +2,8 @@
 mqtt = require 'stockmqtt'
 client = mqtt()
 client.apply = (list) ->
+  client.removeAllListeners()
+
   client.on 'message', (topic, msg) ->
     try
       msg = JSON.parse msg.toString()
@@ -25,6 +27,11 @@ client.apply = (list) ->
             item.name = msg.name
         item.diffTotal = item.currTotal - item.total
         item.diffPercent = item.diffTotal * 100 / item.total
+
+  client.publish process.env.MQTTTOPIC, JSON.stringify
+    action: 'subscribe'
+    data: _.map list, (item) ->
+      parseInt item.symbol
 
 export default client
 </script>
