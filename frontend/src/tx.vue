@@ -1,8 +1,45 @@
 <template>
   <v-container fluid>
-    <v-btn color='primary' fixed fab bottom right @click='showAdd = true'>
-      <v-icon>add</v-icon>
-    </v-btn>
+    <v-dialog v-model='dialog'>
+      <template v-slot:activator='{ on }'>
+        <v-btn color='primary' fixed fab bottom right v-on='on'>
+          <v-icon>add</v-icon>
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title primary-title>
+          Add TX
+        </v-card-title>
+        <v-card-text>
+          <v-text-field v-model='tx.type' label='Type' />
+          <v-text-field v-model='tx.symbol' label='Symbol' />
+          <v-text-field v-model='tx.quantity' label='Quantity' type='number'/>
+          <v-text-field v-model='tx.price' label='Price' type='number' />
+          <v-menu
+            v-model='menu'
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="290px">
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                v-model="tx.date"
+                prepend-icon="event"
+                label='Date'
+                readonly
+                v-on="on" />
+            </template>
+            <v-date-picker v-model="tx.date" no-title @input="menu = false"/>
+          </v-menu>
+          <v-text-field v-model='tx.notes' label='Notes' />
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click='add'>Add</v-btn>
+          <v-btn @click='dialog = false'>Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-data-table
       :headers='headers'
       :items='list'
@@ -24,6 +61,14 @@
         <span :class='{profit: item.diffTotal > 0, loss: item.diffTotal < 0}'>
           {{float(item.diffTotal)}} / {{float(item.diffPercent)}}%
         </span>
+      </template>
+      <template v-slot:item.action="{ item }">
+        <v-icon small style='margin-right: 6px' @click="edit(item)">
+          edit
+        </v-icon>
+        <v-icon small @click="del(item)">
+          delete
+        </v-icon>
       </template>
       <template v-slot:footer>
         <v-progress-circular indeterminate color='primary'
@@ -63,12 +108,14 @@ export default
       { text: 'Notes', value: 'notes' }
       { text: 'Total', value: 'total' }
       { text: 'P&L', value: 'diffTotal' }
+      { text: 'Action', value: 'action' }
     ] 
     finished: false
     list: []
     tags: []
     sort:
       date: 1
+    dialog: false
     tx:
       symbol: ''
       type: 'Buy'
@@ -90,6 +137,11 @@ export default
       @tx.price = parseFloat @tx.price
       @tx.tags = @tags
       @list.unshift await Portfolio.create data: @tx
+      @dialog = false
+    edit: (item) ->
+    del: (item) ->
+      await Portfolio.delete data: id: item._id
+      @list.splice @list.indexOf(item), 1
     next: (entries) ->
       if entries[0].isIntersecting
         @finished = 0 == await @load @list.length
