@@ -108,7 +108,7 @@ export default
       { text: 'Notes', value: 'notes' }
       { text: 'Total', value: 'total' }
       { text: 'P&L', value: 'diffTotal' }
-      { text: 'Action', value: 'action' }
+      { text: 'Action', value: 'action', sortable: false }
     ] 
     finished: false
     list: []
@@ -164,7 +164,7 @@ export default
         console.error err.toString()
     summary: ->
       reducer = (result, tx) ->
-        result.pl += tx.diffTotal
+        result.pl += tx.total * if /buy/i.test tx.type then 1 else -1
         result
       @list.reduce reducer, pl: 0
   watch:
