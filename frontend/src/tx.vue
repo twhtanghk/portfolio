@@ -15,23 +15,7 @@
           <v-text-field v-model='tx.symbol' label='Symbol' />
           <v-text-field v-model='tx.quantity' label='Quantity' type='number'/>
           <v-text-field v-model='tx.price' label='Price' type='number' />
-          <v-menu
-            v-model='menu'
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="290px">
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="tx.date"
-                prepend-icon="event"
-                label='Date'
-                readonly
-                v-on="on" />
-            </template>
-            <v-date-picker v-model="tx.date" no-title @input="menu = false"/>
-          </v-menu>
+          <dt-input :value.sync='tx.date' />
           <v-text-field v-model='tx.notes' label='Notes' />
         </v-card-text>
         <v-card-actions>
@@ -46,7 +30,20 @@
       disable-pagination
       fixed-header
       hide-default-footer
+      multi-sort
     >
+      <template v-slot:top>
+        <v-row no-gutters>
+          <v-col sm='4'>
+            <v-text-field v-model="filter.symbol" label="Symbol" clearable />
+          </v-col>
+          <v-col sm='4'>
+            <dt-input :value.sync="filter.dtStart" label="Start Date" />
+          </v-col>
+          <v-col sm='4'>
+            <dt-input :value.sync="filter.dtEnd" label="End Date" />
+          </v-col>
+      </template>
       <template v-slot:item.symbol="{ item }">
         <quote :symbol='item.symbol'/>
         <chart :symbol='item.symbol'/>
@@ -91,28 +88,44 @@ export default
   components:
     quote: require('./quote').default
     chart: require('./chart').default
+    dtInput: require('./dtInput').default
   props:
     tab: String
   data: ->
-    headers: [
-      { text: 'Symbol', value: 'symbol' }
-      { text: 'Name', value: 'name' }
-      { text: 'Quantity', value: 'quantity' }
-      { text: 'Type', value: 'type' }
-      { text: 'Price', value: 'price' }
-      { text: 'Date', value: 'date', sort: (a, b) -> a - b }
-      { text: 'Tags', value: 'tags' }
-      { text: 'Notes', value: 'notes' }
-      { text: 'Total', value: 'total' }
-      { text: 'P&L', value: 'diffTotal' }
-      { text: 'Action', value: 'action', sortable: false }
-    ] 
+    headers:
+      [
+        { 
+          text: 'Symbol'
+          value: 'symbol'
+          filter: @symbolFilter
+        }
+        { text: 'Name', value: 'name' }
+        { text: 'Quantity', value: 'quantity' }
+        { text: 'Type', value: 'type' }
+        { text: 'Price', value: 'price' }
+        { 
+          text: 'Date'
+          value: 'date'
+          sort: (a, b) -> 
+            a - b
+          filter: @dateFilter
+        }
+        { text: 'Tags', value: 'tags' }
+        { text: 'Notes', value: 'notes' }
+        { text: 'Total', value: 'total' }
+        { text: 'P&L', value: 'diffTotal' }
+        { text: 'Action', value: 'action', sortable: false }
+      ] 
     finished: false
     list: []
     tags: []
     sort:
       date: 1
     dialog: false
+    filter:
+      dtStart: null
+      dtEnd: null
+      symbol: null
     tx:
       symbol: ''
       type: 'Buy'
@@ -121,7 +134,6 @@ export default
       price: 0
       notes: ''
       tags: []
-    menu: false
   validations:
     'tx.symbol': {required, numeric}
     'tx.quantity': {required, numeric}
@@ -163,6 +175,22 @@ export default
         result.pl += tx.total * if /buy/i.test tx.type then 1 else -1
         result
       @list.reduce reducer, pl: 0
+    symbolFilter: (value) ->
+      if @filter.symbol? and @filter.symbol.trim() != ''
+        (new RegExp @filter.symbol).test value
+      else
+        true
+    dateFilter: (value) ->
+      if @filter.dtStart? or @filter.dtEnd?
+        start = @filter.dtStart
+        start ?= -8640000000000000
+        start = new Date start
+        end = @filter.dtEnd
+        end ?= 8640000000000000
+        end = new Date end
+        start <= value and value <= end
+      else
+        true
   watch:
     tab: (newtab, oldtab) ->
       if newtab == 'tx'
