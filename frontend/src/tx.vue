@@ -63,9 +63,6 @@
         </span>
       </template>
       <template v-slot:item.action="{ item }">
-        <v-icon small style='margin-right: 6px' @click="edit(item)">
-          edit
-        </v-icon>
         <v-icon small @click="del(item)">
           delete
         </v-icon>
@@ -138,7 +135,6 @@ export default
       @tx.tags = @tags
       @list.unshift await Portfolio.create data: @tx
       @dialog = false
-    edit: (item) ->
     del: (item) ->
       await Portfolio.delete data: id: item._id
       @list.splice @list.indexOf(item), 1
