@@ -103,7 +103,7 @@ export default
       { text: 'Quantity', value: 'quantity' }
       { text: 'Type', value: 'type' }
       { text: 'Price', value: 'price' }
-      { text: 'Date', value: 'date' }
+      { text: 'Date', value: 'date', sort: (a, b) -> a - b }
       { text: 'Tags', value: 'tags' }
       { text: 'Notes', value: 'notes' }
       { text: 'Total', value: 'total' }
@@ -144,7 +144,7 @@ export default
       @list.splice @list.indexOf(item), 1
     next: (entries) ->
       if entries[0].isIntersecting
-        @finished = 0 == await @load @list.length
+        @finished = 30 > await @load @list.length
     clear: ->
       @list.splice 0, @list.length
       @finished = false
