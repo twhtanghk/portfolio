@@ -31,6 +31,7 @@
       fixed-header
       hide-default-footer
       multi-sort
+      @current-items='filteredList'
     >
       <template v-slot:top>
         <v-row no-gutters>
@@ -69,8 +70,8 @@
           v-if='! finished'
           v-intersect='next' />
         Total:
-        <span :class='{profit: summary().pl > 0, loss: summary().pl < 0}'>
-          {{ float(summary().pl) }}
+        <span :class='{profit: selectedTotal >= 0, loss: selectedTotal < 0}'>
+          {{ float(selectedTotal) }}
         </span>
       </template>
     </v-data-table>
@@ -134,6 +135,7 @@ export default
       price: 0
       notes: ''
       tags: []
+    selectedTotal: 0
   validations:
     'tx.symbol': {required, numeric}
     'tx.quantity': {required, numeric}
@@ -170,11 +172,6 @@ export default
         return res.length
       catch err
         console.error err.toString()
-    summary: ->
-      reducer = (result, tx) ->
-        result.pl += tx.total * if /buy/i.test tx.type then 1 else -1
-        result
-      @list.reduce reducer, pl: 0
     symbolFilter: (value) ->
       if @filter.symbol? and @filter.symbol.trim() != ''
         (new RegExp @filter.symbol).test value
@@ -191,6 +188,11 @@ export default
         start <= value and value <= end
       else
         true
+    filteredList: (list) ->
+      reducer = (result, tx) ->
+        result += tx.total * if /buy/i.test tx.type then 1 else -1
+        result
+      @selectedTotal = list.reduce reducer, 0
   watch:
     tab: (newtab, oldtab) ->
       if newtab == 'tx'
