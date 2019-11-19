@@ -1,75 +1,54 @@
 <template>
   <v-container fluid>
-    <v-layout column>
-      <v-flex>
-        <row class='portfolio-header'>
-          <template v-slot:col1>
-            <div>
-              Name
-              <order @sort="sort('name', $event)" />
-              Symbol
-              <order @sort="sort('symbol', $event)" />
-            </div>
-            <div>
-              Daily Change
-              <order @sort="sort('quote.change[1]', $event)" />
-            </div>
-          </template>
-          <template v-slot:col2>
-            <div>
-              Quantity
-              <order @sort="sort('quantity', $event)" />
-            </div>
-            <div>
-              Price
-              <order @sort="sort('price', $event)" />
-              Current / Stoploss / NAV
-            </div>
-          </template>
-          <template v-slot:col3>
-            <div>
-              PE
-              <order @sort="sort('details.pe', $event)" />
-              PB
-              <order @sort="sort('details.pb', $event)" />
-            </div>
-            <div>
-              Dividend
-              <order @sort="sort('details.dividend[1]', $event)" />
-              Ex-date
-              <order @sort="sort('details.dividend[3]', $event)" />
-            </div>
-          </template>
-          <template v-slot:col4>
-            <div>
-              Total
-              <order @sort="sort('total', $event)" />
-              Current
-              <order @sort="sort('currTotal', $event)" />
-            </div>
-            <div>
-              P&ampL
-              <order @sort="sort('diffPercent', $event)" />
-            </div>
-          </template>
-        </row>
-        <holditem :class='{odd: index % 2 == 1}' v-for='(item, index) in list' :item='item' :key='item._id'/>
-        <row class='portfolio-footer'>
-          <template v-slot:col4>
-            <div>
-              {{float(sumTotal)}}
-              /
-              {{float(sumCurrTotal)}}
-            </div>
-            <div>
-              {{float(sumDiffTotal)}}
-              /
-              {{float(sumDiffTotalPercent)}}%
-            </div>
-          </template>
-        </row>
-      </v-flex>
-    </v-layout>
+    <v-data-table
+      :headers='headers'
+      :items='list'
+      disable-pagination
+      fixed-header
+      hide-default-footer
+      multi-sort
+    >
+      <template v-slot:item.symbol="{ item }">
+        <quote :symbol='item.symbol'/>
+        <chart :symbol='item.symbol'/>
+      </template>
+      <template v-slot:item.quote.change="{ item }">
+        <span :class='changeClass(item.quote.change[0], 0)'>
+          {{float(item.quote.change[0])}} / {{float(item.quote.change[1])}}%
+        </span>
+      </template>
+      <template v-slot:item.stopLoss="{ item }">
+        <span :class='changeClass(item.stopLoss, item.price)'>
+          {{float(item.stopLoss)}}
+        <span>
+      </template>
+      <template v-slot:item.details.dividend="{ item }">
+        <a :href='item.details.dividend[2]' target='_blank'>
+          {{float(item.details.dividend[0])}} / {{float(item.details.dividend[1])}}% / {{date(item.details.dividend[3])}}
+        <a>
+      </template>
+      <template v-slot:item.total="{ item }">
+        {{float(item.total)}} / {{float(item.currTotal)}}
+      </template>
+      <template v-slot:item.diffTotal="{ item }">
+        <span :class='changeClass(item.diffTotal, 0)'>
+          {{float(item.diffTotal)}} / {{float(item.diffPercent)}}%
+        </span
+      </div>
+      </template>
+      <template v-slot:footer>
+         <div>
+           {{float(sumTotal)}}
+           /
+           {{float(sumCurrTotal)}}
+         </div>
+         <div>
+           {{float(sumDiffTotal)}}
+           /
+           {{float(sumDiffTotalPercent)}}%
+         </div>
+      </template>
+    </v-data-table>
   </v-container>
 </template>
 
@@ -83,15 +62,27 @@ client = require('./mqtt').default
 
 export default
   components:
-    holditem: require('./holditem').default
-    row: require('./row').default
-    order: require('./order').default
+    quote: require('./quote').default
+    chart: require('./chart').default
   props:
     tab: String
   data: ->
     list: []
     tags: []
-    order: []
+    headers: [
+      { text: 'Symbol', value: 'symbol' }
+      { text: 'Name', value: 'name' }
+      { text: 'Daily Change', value: 'quote.change' }
+      { text: 'Quantity', value: 'quantity' }
+      { text: 'Price', value: 'price' }
+      { text: 'Current', value: 'quote.curr' }
+      { text: 'StopLoss', value: 'stopLoss' }
+      { text: 'PE', value: 'details.pe' }
+      { text: 'PB', value: 'details.pb' }
+      { text: 'Dividend', value: 'details.dividend' }
+      { text: 'Total', value: 'total' }
+      { text: 'Change', value: 'diffTotal' }
+    ]
   computed:
     sumTotal: ->
       d3.sum @list, (quote) ->
@@ -106,6 +97,10 @@ export default
       @sumDiffTotal * 100 / @sumTotal
   methods:
     float: format.float
+    date: format.date
+    changeClass: (curr, org) ->
+      profit: curr >= org
+      loss: curr < org
     sort: (prop, value) ->
       index = _.findIndex @order, prop
       if value
@@ -117,7 +112,7 @@ export default
           @order.push ret
       else
         @order.splice index, 1
-    reload: ->
+    load: ->
       try
         @list.splice 0, @list.length
         data = sort:
@@ -129,32 +124,16 @@ export default
           data: data
         for i in res
           @list.push i
-        client.publish process.env.MQTTTOPIC, JSON.stringify
-          action: 'subscribe'
-          data: _.map res, (item) ->
-            parseInt item.symbol
+        client.apply @list
       catch err
         console.error err.toString()
   watch:
-    order:
-      handler: (after, before) ->
-        compare = _.map @order, (obj) ->
-          [prop, order] = Object.entries(obj)[0]
-          (a, b) ->
-            order * (_.get(a, prop) - _.get(b, prop))
-        @list.sort (a, b) ->
-          for i in compare
-            ret = i(a, b)
-            if ret != 0
-              return ret
-          return 0
-      deep: true
     tab: (newtab, oldtab) ->
       if newtab == 'hold'
-        @reload()
+        @load()
     tags: (newtags, oldtags) ->
       if @tab == 'hold'
-        @reload()
+        @load()
   created: ->
     client.apply @list
     eventBus
