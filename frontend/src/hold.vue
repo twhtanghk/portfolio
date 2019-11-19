@@ -17,6 +17,9 @@
           {{float(item.quote.change[0])}} / {{float(item.quote.change[1])}}%
         </span>
       </template>
+      <template v-slot:item.quantity="{ item }">
+        {{float(item.quantity)}}
+      </template>
       <template v-slot:item.stopLoss="{ item }">
         <span :class='changeClass(item.stopLoss, item.price)'>
           {{float(item.stopLoss)}}
@@ -30,8 +33,8 @@
       <template v-slot:item.total="{ item }">
         {{float(item.total)}} / {{float(item.currTotal)}}
       </template>
-      <template v-slot:item.diffTotal="{ item }">
-        <span :class='changeClass(item.diffTotal, 0)'>
+      <template v-slot:item.diffPercent="{ item }">
+        <span :class='changeClass(item.diffPercent, 0)'>
           {{float(item.diffTotal)}} / {{float(item.diffPercent)}}%
         </span
       </div>
@@ -72,16 +75,26 @@ export default
     headers: [
       { text: 'Symbol', value: 'symbol' }
       { text: 'Name', value: 'name' }
-      { text: 'Daily Change', value: 'quote.change' }
+      { 
+        text: 'Daily Change'
+        value: 'quote.change'
+        sort: (a, b) ->
+          a[1] - b[1]
+      }
       { text: 'Quantity', value: 'quantity' }
-      { text: 'Price', value: 'price' }
-      { text: 'Current', value: 'quote.curr' }
+      { text: 'Price', value: 'price', sort: @sort }
+      { text: 'Current', value: 'quote.curr', sort: @sort }
       { text: 'StopLoss', value: 'stopLoss' }
       { text: 'PE', value: 'details.pe' }
       { text: 'PB', value: 'details.pb' }
-      { text: 'Dividend', value: 'details.dividend' }
+      { 
+        text: 'Dividend'
+        value: 'details.dividend' 
+        sort: (a, b) ->
+          a[1] - b[1]
+      }
       { text: 'Total', value: 'total' }
-      { text: 'Change', value: 'diffTotal' }
+      { text: 'Change', value: 'diffPercent' }
     ]
   computed:
     sumTotal: ->
@@ -101,17 +114,8 @@ export default
     changeClass: (curr, org) ->
       profit: curr >= org
       loss: curr < org
-    sort: (prop, value) ->
-      index = _.findIndex @order, prop
-      if value
-        if index != -1
-          @order[index][prop] = value
-        else
-          ret = {}
-          ret[prop] = value
-          @order.push ret
-      else
-        @order.splice index, 1
+    sort: (a, b) ->
+      a - b
     load: ->
       try
         @list.splice 0, @list.length
