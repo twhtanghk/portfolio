@@ -14,11 +14,16 @@
       </template>
       <template v-slot:item.quote.change="{ item }">
         <span :class='changeClass(item.quote.change[0], 0)'>
-          {{float(item.quote.change[0])}} / {{float(item.quote.change[1])}}%
+          <div>{{item.quote.change[0]}}</div>
+          <div>{{float(item.quote.change[1])}}%</div>
         </span>
       </template>
       <template v-slot:item.quantity="{ item }">
         {{float(item.quantity)}}
+      </template>
+      <template v-slot:item.quote.curr="{ item }">
+        <div>{{item.quote.curr}}</div>
+        <div>{{float(item.details.nav)}}</div>
       </template>
       <template v-slot:item.stopLoss="{ item }">
         <span :class='changeClass(item.stopLoss, item.price)'>
@@ -26,16 +31,21 @@
         <span>
       </template>
       <template v-slot:item.details.dividend="{ item }">
+        <div>
+          {{float(item.details.dividend[0])}}/{{float(item.details.dividend[1])}}%
+        </div>
         <a :href='item.details.dividend[2]' target='_blank'>
-          {{float(item.details.dividend[0])}} / {{float(item.details.dividend[1])}}% / {{date(item.details.dividend[3])}}
-        <a>
+          {{date(item.details.dividend[3])}}
+        </a>
       </template>
       <template v-slot:item.total="{ item }">
-        {{float(item.total)}} / {{float(item.currTotal)}}
+        <div>{{float(item.total)}}</div>
+        <div>{{float(item.currTotal)}}</div>
       </template>
       <template v-slot:item.diffPercent="{ item }">
         <span :class='changeClass(item.diffPercent, 0)'>
-          {{float(item.diffTotal)}} / {{float(item.diffPercent)}}%
+          <div>{{float(item.diffTotal)}}</div>
+          <div>{{float(item.diffPercent)}}%</div>
         </span
       </div>
       </template>
@@ -83,7 +93,7 @@ export default
       }
       { text: 'Quantity', value: 'quantity' }
       { text: 'Price', value: 'price', sort: @sort }
-      { text: 'Current', value: 'quote.curr', sort: @sort }
+      { text: 'Current / NAV', value: 'quote.curr', sort: @sort }
       { text: 'StopLoss', value: 'stopLoss' }
       { text: 'PE', value: 'details.pe' }
       { text: 'PB', value: 'details.pb' }
