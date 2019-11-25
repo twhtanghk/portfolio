@@ -1,10 +1,9 @@
 <script lang='coffee'>
 mqtt = require 'stockmqtt'
+update = null
 client = mqtt()
 client.apply = (list) ->
-  client.removeAllListeners()
-
-  client.on 'message', (topic, msg) ->
+  update = (topic, msg) ->
     try
       msg = JSON.parse msg.toString()
     catch err
@@ -27,6 +26,11 @@ client.apply = (list) ->
             item.name = msg.name
         item.diffTotal = item.currTotal - item.total
         item.diffPercent = item.diffTotal * 100 / item.total
+
+  if update?
+    client.off 'message', update
+
+  client.on 'message', update
 
   client.publish process.env.MQTTTOPIC, JSON.stringify
     action: 'subscribe'
