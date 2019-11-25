@@ -3,6 +3,9 @@ mqtt = require 'stockmqtt'
 update = null
 client = mqtt()
 client.apply = (list) ->
+  if update?
+    client.off 'message', update
+
   update = (topic, msg) ->
     try
       msg = JSON.parse msg.toString()
@@ -26,9 +29,6 @@ client.apply = (list) ->
             item.name = msg.name
         item.diffTotal = item.currTotal - item.total
         item.diffPercent = item.diffTotal * 100 / item.total
-
-  if update?
-    client.off 'message', update
 
   client.on 'message', update
 
