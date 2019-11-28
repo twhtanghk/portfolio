@@ -130,7 +130,7 @@ export default
       try
         @list.splice 0, @list.length
         data = sort:
-          date: 1
+          date: -1
         if @tags.length
           data.tags = $in: @tags
         res = await Portfolio.get

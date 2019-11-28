@@ -121,7 +121,7 @@ export default
     list: []
     tags: []
     sort:
-      date: 1
+      date: -1
     dialog: false
     filter:
       dtStart: null
