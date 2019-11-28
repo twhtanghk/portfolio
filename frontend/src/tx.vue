@@ -70,7 +70,7 @@
           v-if='! finished'
           v-intersect='next' />
         Total:
-        <span :class='{profit: selectedTotal >= 0, loss: selectedTotal < 0}'>
+        <span :class='{profit: selectedTotal > 0, loss: selectedTotal < 0}'>
           {{ float(selectedTotal) }}
         </span>
       </template>

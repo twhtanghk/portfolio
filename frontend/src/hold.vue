@@ -122,7 +122,7 @@ export default
     float: format.float
     date: format.date
     changeClass: (curr, org) ->
-      profit: curr >= org
+      profit: curr > org
       loss: curr < org
     sort: (a, b) ->
       a - b
