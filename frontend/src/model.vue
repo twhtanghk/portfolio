@@ -12,7 +12,7 @@ export default
     methods:
       ad: (opts) ->
         {data} = opts
-        await @get url: "#{@baseUrl}/#{data.sector}/ad"
+        await @get url: "#{@baseUrl}/#{encodeURIComponent data.sector}/ad"
   Portfolio: new Vue
     extends: Vue.component 'model'
     props:

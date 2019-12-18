@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-for='(data, sector) in ad'>
-      {{sector}}:
-      <div v-for='row in data'>
+    <div v-for='sector in sectors'>
+      <a :href='sector' target='_blank'>{{sector}}</a>:
+      <div v-for='row in ad[sector]'>
         {{row}}
       </div>
     </div>
@@ -14,18 +14,11 @@
 
 export default
   data: ->
-    ad: 
-      HSI: []
-      material: []
-      communication: []
-      consumerDiscretionary: []
-      consumerStaples: []
-      energy: []
-      financial: []
-      healthcare: []
-      industrial: []
-      IT: []
+    sectors: []
+    ad: {}
   created: ->
-    for sector, data of @ad
+    @sectors = await Sector.list()
+    for sector in @sectors
       @ad[sector] = await Sector.ad data: sector: sector
+    @$forceUpdate()
 </script>
