@@ -29,6 +29,10 @@ class Sector extends Model
           catch err
             console.error err
 
+  find: (ctx, next) ->
+    await @model.distinct 'sector'
+    await next()
+
   ad: (ctx, next) ->
     sector = ctx.params.sector
     ctx.response.body = await @model.aggregate [
