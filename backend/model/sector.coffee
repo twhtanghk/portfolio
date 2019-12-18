@@ -30,7 +30,7 @@ class Sector extends Model
             console.error err
 
   find: (ctx, next) ->
-    await @model.distinct 'sector'
+    ctx.response.body = await @model.distinct 'sector'
     await next()
 
   ad: (ctx, next) ->
