@@ -1,4 +1,5 @@
 <script lang='coffee'>
+_ = require 'lodash'
 Vue = require('vue').default
 Vue.use require('vue.model/src/plugin').default
 eventBus = require('./eventBus').default
@@ -12,7 +13,11 @@ export default
     methods:
       ad: (opts) ->
         {data} = opts
-        await @get url: "#{@baseUrl}/#{encodeURIComponent data.sector}/ad"
+        res = await @get url: "#{@baseUrl}/#{encodeURIComponent data.sector}/ad"
+        sum = 0
+        _.map res, (row) ->
+          sum += row.diff
+          _.extend row, ad: sum
   Portfolio: new Vue
     extends: Vue.component 'model'
     props:

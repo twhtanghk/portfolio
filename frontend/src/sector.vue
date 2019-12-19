@@ -1,24 +1,22 @@
 <template>
-  <div>
-    <div v-for='sector in sectors'>
-      <a :href='sector' target='_blank'>{{sector}}</a>:
-      <div v-for='row in ad[sector]'>
-        {{row}}
-      </div>
-    </div>
-  </div>
+  <v-container>
+    <v-row v-for='sector in sectors'>
+      <v-col cols='12'>
+        <a :href='sector' target='_blank'>{{sector}}</a>:
+        <ad-chart :sector='sector'/>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang='coffee'>
 {Sector} = require('./model').default
 
 export default
+  components:
+    adChart: require('./adChart').default
   data: ->
     sectors: []
-    ad: {}
-  created: ->
+  mounted: ->
     @sectors = await Sector.list()
-    for sector in @sectors
-      @ad[sector] = await Sector.ad data: sector: sector
-    @$forceUpdate()
 </script>
