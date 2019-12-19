@@ -14,7 +14,9 @@ export default
       data:
         json: await Sector.ad data: sector: @sector
         keys:
-          value: ['_id', 'diff']
+          value: ['_id', 'ad']
         x: '_id'
-        xFormat: '%Y%m%d'
+      axis:
+        x:
+          type: 'category'
 </script>
