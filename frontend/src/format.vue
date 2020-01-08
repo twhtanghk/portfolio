@@ -4,5 +4,6 @@ export default
     if data?
       new Date(data).toLocaleDateString()
   float: (data) ->
-    Number(data?.toFixed 2).toLocaleString()
+    if data?
+      Number(data?.toFixed 2).toLocaleString()
 </script>

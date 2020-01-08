@@ -16,7 +16,7 @@ client.apply = (list) ->
       item.currTotal = item.quote.curr * item.quantity
       item.stopLoss = parseFloat(process.env.STOPLOSS) * Math.max item.price, msg.history['1個月'].high
     for item in list
-      if msg.symbol == parseInt item.symbol
+      if msg.symbol == item.symbol
         switch msg.src
           when 'ib'
             mergeQuote item, msg
@@ -24,7 +24,7 @@ client.apply = (list) ->
             mergeQuote item, msg
             item.details = Object.assign item.details, msg.details
             item['history'] = msg.history
-            if item.details.dividend[3]?
+            if item.details.dividend?[3]?
               item.details.dividend[3] = new Date item.details.dividend[3]
             item.name = msg.name
         item.diffTotal = item.currTotal - item.total
@@ -35,7 +35,7 @@ client.apply = (list) ->
   client.publish process.env.MQTTTOPIC, JSON.stringify
     action: 'subscribe'
     data: _.map list, (item) ->
-      parseInt item.symbol
+      item.symbol
 
 export default client
 </script>
