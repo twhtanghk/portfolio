@@ -30,6 +30,12 @@
           {{float(item.stopLoss)}}
         <span>
       </template>
+      <template v-slot:item.details.pe="{ item }">
+        {{float(item.details.pe)}}
+      </template>
+      <template v-slot:item.details.pb="{ item }">
+        {{float(item.details.pb)}}
+      </template>
       <template v-slot:item.details.dividend="{ item }">
         <div>
           {{float(item.details.dividend[0])}}/{{float(item.details.dividend[1])}}%
