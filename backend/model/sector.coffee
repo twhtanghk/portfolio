@@ -46,7 +46,7 @@ class Sector extends Model
         sum = 0
         data = (await @adData sector.url).map (row) ->
           sum += row.diff
-          _.extend row, ad: sum
+          _.extend row, ad: sum, logAd: Math.log sum
         _.extend sector, data: data
     await next()
 
