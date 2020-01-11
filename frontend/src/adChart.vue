@@ -7,7 +7,7 @@ c3 = require 'c3'
 {Sector} = require('./model').default
 
 export default
-  props: ['sector']
+  props: ['sector', 'name']
   mounted: ->
     c3.generate
       bindto: @$el
@@ -16,6 +16,8 @@ export default
         keys:
           value: ['_id', 'ad']
         x: '_id'
+        names:
+          ad: @name
       axis:
         x:
           type: 'category'
