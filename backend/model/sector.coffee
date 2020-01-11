@@ -4,7 +4,7 @@ Model = require 'koamodel'
 
 name = (url) ->
   code = url.match /.*=([0-9]*)/
-  ret = url
+  ret = 'hsi'
   if code?
     ret = await service.name code[1]
   return ret
