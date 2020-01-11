@@ -1,4 +1,13 @@
+Promise = require 'bluebird'
+{service} = require 'hkex'
 Model = require 'koamodel'
+
+name = (url) ->
+  code = url.match /.*=([0-9]*)/
+  ret = url
+  if code?
+    ret = await service.name code[1]
+  return ret
 
 class Sector extends Model
   name: 'sector'
@@ -30,7 +39,10 @@ class Sector extends Model
             console.error err
 
   find: (ctx, next) ->
-    ctx.response.body = await @model.distinct 'sector'
+    ctx.response.body = await Promise.map (await @model.distinct 'sector')
+      .map (url) ->
+        url: url
+        name: await name url
     await next()
 
   ad: (ctx, next) ->
