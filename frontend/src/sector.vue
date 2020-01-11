@@ -2,8 +2,7 @@
   <v-container>
     <v-row v-for='sector in sectors'>
       <v-col cols='12'>
-        <a :href='sector.url' target='_blank'>{{sector.name}}</a>
-        <ad-chart :sector='sector.url' :name='sector.name'/>
+        <ad-chart :sector='sector'/>
       </v-col>
     </v-row>
   </v-container>

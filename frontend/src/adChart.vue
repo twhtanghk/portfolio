@@ -4,21 +4,25 @@
 
 <script lang='coffee'>
 c3 = require 'c3'
-{Sector} = require('./model').default
 
 export default
-  props: ['sector', 'name']
+  props: ['sector']
   mounted: ->
+    {url, name, data} = @sector
     c3.generate
       bindto: @$el
       data:
-        json: await Sector.ad data: sector: @sector
+        json: data
         keys:
           value: ['_id', 'ad']
         x: '_id'
         names:
-          ad: @name
+          ad: name
       axis:
         x:
           type: 'category'
+      legend:
+        item:
+          onclick: ->
+            window.open url
 </script>

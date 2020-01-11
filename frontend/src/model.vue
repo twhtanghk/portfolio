@@ -10,14 +10,6 @@ export default
     props:
       baseUrl:
         default: "#{process.env.API_URL}/api/sector"
-    methods:
-      ad: (opts) ->
-        {data} = opts
-        res = await @get url: "#{@baseUrl}/#{encodeURIComponent data.sector}/ad"
-        sum = 0
-        _.map res, (row) ->
-          sum += row.diff
-          _.extend row, ad: sum
   Portfolio: new Vue
     extends: Vue.component 'model'
     props:
