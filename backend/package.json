@@ -5,6 +5,7 @@
   "description": "keep track portfolio data",
   "keywords": [],
   "dependencies": {
+    "hkex": "https://github.com/twhtanghk/hkex",
     "koamodel": "https://github.com/twhtanghk/koamodel",
     "mqtt": "^3.0.0"
   },

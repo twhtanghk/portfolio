@@ -39,7 +39,7 @@ class Sector extends Model
             console.error err
 
   find: (ctx, next) ->
-    ctx.response.body = await Promise.map (await @model.distinct 'sector')
+    ctx.response.body = await Promise.all (await @model.distinct 'sector')
       .map (url) ->
         url: url
         name: await name url
