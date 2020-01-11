@@ -1,4 +1,14 @@
+_ = require 'lodash'
+Promise = require 'bluebird'
+{service} = require 'hkex'
 Model = require 'koamodel'
+
+name = (url) ->
+  code = url.match /.*=([0-9]*)/
+  ret = 'hsi'
+  if code?
+    ret = await service.name code[1]
+  return ret
 
 class Sector extends Model
   name: 'sector'
@@ -30,12 +40,31 @@ class Sector extends Model
             console.error err
 
   find: (ctx, next) ->
-    ctx.response.body = await @model.distinct 'sector'
+    ctx.response.body = await Promise.all (await @sectors())
+      .map (sector) =>
+        # derive ad from existing data [{date, up, down, diff}, ....]
+        sum = 0
+        data = (await @adData sector.url).map (row) ->
+          sum += row.diff
+          _.extend row, ad: sum
+        _.extend sector, data: data
     await next()
 
   ad: (ctx, next) ->
     sector = ctx.params.sector
-    ctx.response.body = await @model.aggregate [
+    ctx.response.body = await @adData sector
+    await next()
+
+  # get existing sectors url and name from db
+  sectors: ->
+    await Promise.all (await @model.distinct 'sector')
+      .map (url) ->
+        url: url
+        name: await name url
+
+  # get sector data [{date, up, down, diff}, ...] from db
+  adData: (sector) ->
+    await @model.aggregate [
       {
         $match:
           sector: sector
