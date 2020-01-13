@@ -21,6 +21,11 @@ class Sector extends Model
     'volume'
   ]
 
+  # see https://platform.ayasdi.com/sdkdocs/transformations/symmetriclog.html
+  # symmetric log
+  @symlog: (x) ->
+    if x >= 0 then Math.log(x + 1) else -Math.log(-x + 1)
+
   constructor: ->
     super()
     client = require 'mqtt'
@@ -46,7 +51,7 @@ class Sector extends Model
         sum = 0
         data = (await @adData sector.url).map (row) ->
           sum += row.diff
-          _.extend row, ad: sum
+          _.extend row, ad: sum, symlog: Sector.symlog sum
         _.extend sector, data: data
     await next()
 

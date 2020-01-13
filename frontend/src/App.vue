@@ -43,7 +43,7 @@ export default
 <style lang='scss'>
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
 @import '~vuetify/dist/vuetify.min.css';
-@import '~c3/c3.min.css';
+@import '~plotly.js/src/css/style.scss';
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
