@@ -14,7 +14,7 @@
 </template>
 
 <script lang='coffee'>
-{Sector} = require('./model').default
+{Sector} = require('./plugins/model.coffee').default
 
 export default
   components:

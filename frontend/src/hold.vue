@@ -76,7 +76,7 @@ _ = require 'lodash'
 d3 = require 'd3'
 format = require('./format').default
 eventBus = require('./eventBus').default
-{Portfolio} = require('./model').default
+{Portfolio} = require('./plugins/model.coffee').default
 client = require('./mqtt').default
 
 export default
