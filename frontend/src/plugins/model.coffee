@@ -6,11 +6,11 @@ class Model
     @idAttribute ?= 'id'
     @api ?= fetch
     @mw = [
-      @json
-      @methodOverride
-      @req
-      @res
-      @error
+      ({req, res}) => @json {req, res}
+      ({req, res}) => @methodOverride {req, res}
+      ({req, res}) => @req {req, res}
+      ({req, res}) => @res {req, res}
+      ({req, res}) => @error {req, res}
     ]
 
   form: ({req,res} = {}) ->
