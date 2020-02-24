@@ -70,7 +70,8 @@ class Model
       when 'application/json'
         res.data = await res.json()
         if Array.isArray res.data
-          res.data = res.data.map @format
+          res.data = res.data.map (obj) =>
+            @format obj
         else
           res.data = @format res.data
     {req, res}
@@ -157,6 +158,8 @@ class Portfolio extends Model
       data[field] = new Date data[field]
     data
   format: (data) ->
+    if 'string' == typeof data
+      return data
     ['date', 'updatedAt', 'createdAt'].map (name) =>
       data = @date data, name
     if data.quantity? and data.price?

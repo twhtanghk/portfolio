@@ -26,7 +26,6 @@ module.exports =
       process.env.API_URL = '.'
     config.plugins.push new EnvironmentPlugin [
       'CLIENT_ID'
-      'CLIENT_SECRET'
       'AUTH_URL'
       'TOKEN_URL'
       'API_URL'
