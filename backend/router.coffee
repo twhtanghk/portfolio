@@ -28,3 +28,17 @@ module.exports = router
   .delete '/api/portfolio/:id', isAuthenticated, isOwner, portfolio.destroy
   .get '/api/sector', sector.find
   .get '/api/sector/:sector/ad', sector.ad
+  .get '/callback', (ctx, next) ->
+    {URLSearchParams} = require 'url'
+    {request} = require 'needle'
+    {code} = ctx.request.query
+    params =
+      client_id: process.env.CLIENT_ID
+      client_secret: process.env.CLIENT_SECRET
+      code: code
+    {promisify} = require 'bluebird'
+    request = promisify request
+    {body} = await request 'get', process.env.TOKEN_URL, params, json: true
+    query = new URLSearchParams body
+    ctx.redirect "./##{query.toString()}"
+    await next()
