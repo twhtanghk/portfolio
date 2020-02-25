@@ -81,7 +81,7 @@
 <script lang='coffee'>
 eventBus = require('./eventBus').default
 format = require('./format').default
-{Portfolio} = require('./model').default
+{Portfolio} = require('./plugins/model.coffee').default
 client = require('./mqtt').default
 {required, numeric, decimal} = require 'vuelidate/lib/validators'
 

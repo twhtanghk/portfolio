@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <authForm :eventBus='eventBus' :oauth2='oauth2' />
     <drawer />
     <toolbar />
     <!--alert /-->
@@ -13,10 +12,9 @@
 <script lang='coffee'>
 _ = require 'lodash'
 Vue = require('vue').default
+
 Vue.use require 'vuetify'
 Vue.use require('vuelidate').default
-Vue.use require('bootstrap-vue').default
-Vue.use require('vue.oauth2/src/plugin').default
 eventBus = require('./eventBus').default
 
 export default
@@ -28,11 +26,6 @@ export default
     portfolio: require('./portfolio').default
     sector: require('./sector').default
   data: ->
-    oauth2:
-      url: process.env.AUTH_URL
-      client: process.env.CLIENT_ID
-      scope: 'User'
-      response_type: 'token'
     content: 'portfolio'
     eventBus: eventBus
   created: ->

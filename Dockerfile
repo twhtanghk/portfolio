@@ -6,7 +6,7 @@ ADD . $APP
 WORKDIR $APP
 
 RUN (cd backend && yarn install) \
-&& (cd frontend && yarn install --network-concurrency 1)
+&& (cd frontend && npm i)
 
 EXPOSE 1337
 

@@ -8,7 +8,7 @@
 </template>
 
 <script lang='coffee'>
-{Portfolio} = require('./model').default
+{Portfolio} = require('./plugins/model.coffee').default
 eventBus = require('./eventBus').default
 
 export default

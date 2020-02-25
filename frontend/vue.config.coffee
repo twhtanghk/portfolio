@@ -4,15 +4,14 @@ CompressionWebpackPlugin = require 'compression-webpack-plugin'
 module.exports =
   publicPath: '.'
   outputDir: '../backend/dist'
+  pwa:
+    name: 'portfolio'
+    workboxPluginMode: 'GenerateSW'
   pages:
     index:
       entry: 'src/main.js'
       template: 'public/index.html'
       filename: 'index.html'
-    callback:
-      entry: 'src/callback.coffee'
-      template: 'public/index.html'
-      filename: 'callback.html'
   configureWebpack: (config) ->
     if process.env.NODE_ENV == 'production'
       config.plugins.push new CompressionWebpackPlugin
@@ -28,6 +27,7 @@ module.exports =
     config.plugins.push new EnvironmentPlugin [
       'CLIENT_ID'
       'AUTH_URL'
+      'TOKEN_URL'
       'API_URL'
       'MQTTURL'
       'MQTTUSER'

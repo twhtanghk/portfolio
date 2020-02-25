@@ -15,14 +15,11 @@ verify = ({url, scope, token}) ->
   {statusCode, statusMessage, body} = await needle
     .getAsync url, headers: Authorization: "Bearer #{token}"
   assert statusCode == 200, "#{statusMessage}: #{if body instanceof Buffer then body.toString() else util.inspect body}"
-  result = _.intersection scope, body.scope.split ' '
-  assert result.length == scope.length, "Unauthorized access to #{scope}"
   body
 
 passport.use new Strategy (token, done) -> co ->
   try
-    res = await verify {token}
-    done null, _.extend res.user, client: res.client_id
+    done null, await verify {token}
   catch err
     done err, false
 
