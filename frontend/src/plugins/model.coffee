@@ -4,7 +4,8 @@ oauth2 = require('./oauth2.coffee').default
 class Model
   constructor: ({@baseUrl, @idAttribute, @api}) ->
     @idAttribute ?= 'id'
-    @api ?= fetch
+    @api ?= ->
+      fetch.apply window, arguments
     @mw = [
       ({req, res}) => @json {req, res}
       ({req, res}) => @methodOverride {req, res}
