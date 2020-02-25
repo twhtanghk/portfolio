@@ -18,9 +18,10 @@ sector = require './model/sector'
 isAuthenticated = require './policy/isAuthenticated'
 isOwner = require './policy/isOwner'
 setCreatedBy = require './policy/setCreatedBy'
+dateFormat = require './policy/dateFormat'
 
 module.exports = router
-  .get '/api/portfolio', isAuthenticated, setCreatedBy, portfolio.find
+  .get '/api/portfolio', isAuthenticated, setCreatedBy, dateFormat, portfolio.find
   .get '/api/portfolio/hold', isAuthenticated, setCreatedBy, portfolio.hold
   .get '/api/portfolio/tags', isAuthenticated, setCreatedBy, portfolio.tags
   .post '/api/portfolio', isAuthenticated, setCreatedBy, portfolio.create

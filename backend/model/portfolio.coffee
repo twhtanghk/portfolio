@@ -27,28 +27,34 @@ class Portfolio extends Model
   @isSell: (data) ->
     /^sell$/i.test data.type
 
+  @quantity: (tx) ->
+    if Portfolio.isSell tx then -tx.quantity else tx.quantity
+
+  @total: (txlist) ->
+    quantity: d3.sum txlist, (item) ->
+      Portfolio.quantity(item)
+    price: d3.sum txlist, (item) ->
+      Portfolio.quantity(item) * item.price
+
+  @avg: (txlist) ->
+    {quantity, price} = Portfolio.total txlist 
+    price / quantity
+    
   hold: (ctx, next) ->
     optsField = ['limit', 'skip', 'sort']
     opts = _.pick ctx.request.body, optsField
     query = _.omit ctx.request.body, optsField
     collection = await @model.find query, opts
-    quantity = (item) ->
-      if Portfolio.isSell item then -item.quantity else item.quantity
     ctx.response.body = d3
       .nest()
       .key (item) ->
         item.symbol
       .rollup (group) ->
-        txBuy = _.filter group, (item) ->
-          (new RegExp 'buy', 'i').test item.type
-        lastBuy = _.maxBy txBuy, 'createdAt'
-        share = d3.sum group, quantity
-        total = d3.sum group, (item) ->
-          quantity(item) * item.price
+        {quantity, price} = Portfolio.total group
         return 
           name: group[0].name
-          quantity: share
-          price: lastBuy?.price
+          quantity: quantity
+          price: Portfolio.avg group
           maxPrice: d3.max group, (item) ->
             if Portfolio.isSell item then 0 else item.price
       .entries collection
