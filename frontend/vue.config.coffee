@@ -27,7 +27,6 @@ module.exports =
     config.plugins.push new EnvironmentPlugin [
       'CLIENT_ID'
       'AUTH_URL'
-      'TOKEN_URL'
       'API_URL'
       'MQTTURL'
       'MQTTUSER'
