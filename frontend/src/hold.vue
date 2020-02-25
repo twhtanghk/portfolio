@@ -21,6 +21,9 @@
       <template v-slot:item.quantity="{ item }">
         {{float(item.quantity)}}
       </template>
+      <template v-slot:item.price="{ item }">
+        {{float(item.price)}}
+      </template>
       <template v-slot:item.quote.curr="{ item }">
         <div>{{item.quote.curr}}</div>
         <div>{{float(item.details.nav)}}</div>

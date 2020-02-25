@@ -31,7 +31,6 @@
       fixed-header
       hide-default-footer
       multi-sort
-      @current-items='filteredList'
     >
       <template v-slot:top>
         <v-row no-gutters>
@@ -98,7 +97,6 @@ export default
         { 
           text: 'Symbol'
           value: 'symbol'
-          filter: @symbolFilter
         }
         { text: 'Name', value: 'name' }
         { text: 'Quantity', value: 'quantity' }
@@ -109,7 +107,6 @@ export default
           value: 'date'
           sort: (a, b) -> 
             a - b
-          filter: @dateFilter
         }
         { text: 'Tags', value: 'tags' }
         { text: 'Notes', value: 'notes' }
@@ -154,45 +151,33 @@ export default
       @list.splice @list.indexOf(item), 1
     next: (entries) ->
       if entries[0].isIntersecting
-        @finished = 30 > await @load @list.length
+        @finished = 30 > await @load()
     clear: ->
       @list.splice 0, @list.length
       @finished = false
-    load: (skip = 0) ->
+    opts: ->
+      data =
+        skip: @list.length
+        sort:
+          date: -1
+      if @filter.symbol?
+        data.symbol = $regex: @filter.symbol
+      if @tags.length
+        data.tags = $in: @tags
+      if @filter.dtStart?
+        data.date = _.extend data.date, $gte: @filter.dtStart
+      if @filter.dtEnd?
+        data.date = _.extend data.date, $lte: @filter.dtEnd
+      {data}
+    load: ->
       try
-        data =
-          sort: @sort
-          skip: skip
-        if @tags.length
-          data.tags = $in: @tags
-        res = await Portfolio.get data: data
+        res = await Portfolio.get @opts()
         for i in res
           @list.push i
         client.apply @list
         return res.length
       catch err
         console.error err.toString()
-    symbolFilter: (value) ->
-      if @filter.symbol? and @filter.symbol.trim() != ''
-        (new RegExp @filter.symbol).test value
-      else
-        true
-    dateFilter: (value) ->
-      if @filter.dtStart? or @filter.dtEnd?
-        start = @filter.dtStart
-        start ?= -8640000000000000
-        start = new Date start
-        end = @filter.dtEnd
-        end ?= 8640000000000000
-        end = new Date end
-        start <= value and value <= end
-      else
-        true
-    filteredList: (list) ->
-      reducer = (result, tx) ->
-        result += tx.total * if /buy/i.test tx.type then 1 else -1
-        result
-      @selectedTotal = list.reduce reducer, 0
   watch:
     tab: (newtab, oldtab) ->
       if newtab == 'tx'
@@ -200,6 +185,15 @@ export default
     tags: (newtags, oldtags) ->
       if @tab == 'tx'
         @clear()
+    filter:
+      deep: true
+      handler: ->
+        @clear()
+    list: ->
+      reducer = (result, tx) ->
+        result += tx.total * if /buy/i.test tx.type then 1 else -1
+        result
+      @selectedTotal = @list.reduce reducer, 0
   created: ->
     eventBus
       .$on 'tags.changed', ({tags}) =>
