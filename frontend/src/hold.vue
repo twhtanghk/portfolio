@@ -22,7 +22,8 @@
         {{float(item.quantity)}}
       </template>
       <template v-slot:item.price="{ item }">
-        {{float(item.price)}}
+        <div>{{float(item.price)}}</div>
+        <div>{{float(item.avg)}}</div>
       </template>
       <template v-slot:item.quote.curr="{ item }">
         <div>{{item.quote.curr}}</div>
@@ -101,7 +102,7 @@ export default
           a[1] - b[1]
       }
       { text: 'Quantity', value: 'quantity' }
-      { text: 'Price', value: 'price', sort: @sort }
+      { text: 'Price / Avg', value: 'price', sort: @sort }
       { text: 'Current / NAV', value: 'quote.curr', sort: @sort }
       { text: 'StopLoss', value: 'stopLoss' }
       { text: 'PE', value: 'details.pe' }

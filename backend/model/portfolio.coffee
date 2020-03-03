@@ -54,7 +54,8 @@ class Portfolio extends Model
         return 
           name: group[0].name
           quantity: quantity
-          price: Portfolio.avg group
+          price: _.maxBy(group, 'date').price
+          avg:  Portfolio.avg group
           maxPrice: d3.max group, (item) ->
             if Portfolio.isSell item then 0 else item.price
       .entries collection
