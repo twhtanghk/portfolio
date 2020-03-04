@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@mdi/font": "^4.9.95",
+    "model": "git+https://github.com/twhtanghk/model.git",
     "plotly.js": "^1.52.2",
     "register-service-worker": "^1.6.2",
     "stockmqtt": "https://github.com/twhtanghk/stockMqtt",

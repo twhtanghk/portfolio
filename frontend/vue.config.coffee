@@ -36,7 +36,6 @@ module.exports =
     config.module.rules.push
       test: /\.coffee$/
       use: [
-        'babel-loader'
         'coffee-loader'
       ]
     return
