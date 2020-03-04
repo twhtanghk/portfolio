@@ -51,10 +51,12 @@ class Portfolio extends Model
         item.symbol
       .rollup (group) ->
         {quantity, price} = Portfolio.total group
+        txBuy = _.filter group, (tx) ->
+            ! Portfolio.isSell tx
         return 
           name: group[0].name
           quantity: quantity
-          price: _.maxBy(group, 'date').price
+          price: _.maxBy(txBuy, 'date').price
           avg:  Portfolio.avg group
           maxPrice: d3.max group, (item) ->
             if Portfolio.isSell item then 0 else item.price
