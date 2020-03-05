@@ -24,6 +24,9 @@ class Portfolio extends Model
     ctx.request.body.date = new Date ctx.request.body.date
     super ctx, next
 
+  @isBuy: (data) ->
+    /^buy$/i.test data.type
+
   @isSell: (data) ->
     /^sell$/i.test data.type
 
@@ -52,7 +55,7 @@ class Portfolio extends Model
       .rollup (group) ->
         {quantity, price} = Portfolio.total group
         txBuy = _.filter group, (tx) ->
-            ! Portfolio.isSell tx
+            Portfolio.isBuy tx
         return 
           name: group[0].name
           quantity: quantity
