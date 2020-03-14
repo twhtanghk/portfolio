@@ -1443,9 +1443,9 @@ acorn-walk@^7.0.0:
   integrity sha512-wdlPY2tm/9XBr7QkKlq0WQVgiuGTX6YWPyRyBviSoScBuLfTVQhvwg6wJ369GJ/1nPfTLMfnrFIfjqVg6d+jQQ==
 
 acorn@^5.0.0:
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.3.tgz#67aa231bf8812974b85235a96771eb6bd07ea279"
-  integrity sha512-T/zvzYRfbVojPWahDsE5evJdHb3oJoQfFbsrKM7w5Zcs++Tr257tia3BmMP8XYVjp1S9RZXQMh7gao96BlqZOw==
+  version "5.7.4"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.4.tgz#3e8d8a9947d0599a1796d10225d7432f4a4acf5e"
+  integrity sha512-1D++VG7BhrtvQpNbBzovKNc1FLGGEE/oGe7b9xJm/RFHMBeUaUGpluV9RLjZa47YFdPcDAenEYuq9pQPcMdLJg==
 
 acorn@^6.0.7, acorn@^6.1.1, acorn@^6.2.1:
   version "6.4.0"
@@ -7295,6 +7295,14 @@ mixin-deep@^1.2.0:
   dependencies:
     minimist "0.0.8"
 
+"model@git+https://github.com/twhtanghk/model.git":
+  version "0.0.1"
+  uid cb342aa509dc253a11751028b822a8d8a2c073a7
+  resolved "git+https://github.com/twhtanghk/model.git#cb342aa509dc253a11751028b822a8d8a2c073a7"
+  dependencies:
+    coffeescript "^2.5.1"
+    lodash "^4.17.15"
+
 monotone-convex-hull-2d@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/monotone-convex-hull-2d/-/monotone-convex-hull-2d-1.0.1.tgz#47f5daeadf3c4afd37764baa1aa8787a40eee08c"
@@ -11542,12 +11550,6 @@ vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
-
-"vue.model@https://github.com/twhtanghk/vue.model":
-  version "0.1.0"
-  resolved "https://github.com/twhtanghk/vue.model#3b6de28d44afbba3a9cfc3cf9520ae7a9462efa6"
-  dependencies:
-    vue "^2.5.13"
 
 vue@^2.2.1, vue@^2.5.13, vue@^2.6.10, vue@^2.6.11:
   version "2.6.11"
