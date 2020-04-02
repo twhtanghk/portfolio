@@ -81,7 +81,7 @@ class Sector extends Model
               format: "%Y%m%d"
               date: "$createdAt"
           up: 
-            $sum: $cond: [ $gte: ["$change", 0], 1, 0 ]
+            $sum: $cond: [ $gt: ["$change", 0], 1, 0 ]
           down: 
              $sum: $cond: [ $lt: ["$change", 0], 1, 0 ]
       }
