@@ -1,5 +1,6 @@
 _ = require 'lodash'
 d3 = require 'd3'
+{nest} = require 'd3-collection'
 Model = require 'koamodel'
 
 class Portfolio extends Model
@@ -48,8 +49,7 @@ class Portfolio extends Model
     opts = _.pick ctx.request.body, optsField
     query = _.omit ctx.request.body, optsField
     collection = await @model.find query, opts
-    ctx.response.body = d3
-      .nest()
+    ctx.response.body = nest()
       .key (item) ->
         item.symbol
       .rollup (group) ->
