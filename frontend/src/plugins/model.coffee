@@ -27,6 +27,7 @@ class Portfolio extends Model
       currTotal: null
       diffTotal: null
       diffPercent: null
+      indicators: {}
 
 export default
   Sector: new Model

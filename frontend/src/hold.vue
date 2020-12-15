@@ -36,10 +36,10 @@
         <span>
       </template>
       <template v-slot:item.details.pe="{ item }">
-        {{float(item.details.pe)}}
+        {{float(item.details.pe)}}/{{float(item.details.pb)}}
       </template>
-      <template v-slot:item.details.pb="{ item }">
-        {{float(item.details.pb)}}
+      <template v-slot:item.indicators="{ item }">
+        {{float(item.indicators['c/s'])}}/{{float(item.indicators['s/m'])}}/{{float(item.indicators['m/l'])}}
       </template>
       <template v-slot:item.details.dividend="{ item }">
         <div>
@@ -107,8 +107,8 @@ export default
       { text: 'Price / Avg', value: 'price', sort: @sort }
       { text: 'Current / NAV', value: 'quote.curr', sort: @sort }
       { text: 'StopLoss', value: 'stopLoss' }
-      { text: 'PE', value: 'details.pe' }
-      { text: 'PB', value: 'details.pb' }
+      { text: 'PE/PB', value: 'details.pe', sort: @sort }
+      { text: 'Indicators', value: 'indicators', sort: @sortInd }
       { 
         text: 'Dividend'
         value: 'details.dividend' 
@@ -138,6 +138,8 @@ export default
       loss: curr < org
     sort: (a, b) ->
       a - b
+    sortInd: (a, b) ->
+      @sort a['c/s'], b['c/s']
     load: ->
       try
         @list.splice 0, @list.length
