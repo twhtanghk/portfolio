@@ -28,10 +28,6 @@ class Portfolio extends Model
       diffTotal: null
       diffPercent: null
 
-a = new Portfolio
-  baseUrl: "#{process.env.API_URL}/api/portfolio"
-  api: fetch
-
 export default
   Sector: new Model
     baseUrl: "#{process.env.API_URL}/api/sector"

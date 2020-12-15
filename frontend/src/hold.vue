@@ -11,6 +11,7 @@
       <template v-slot:item.symbol="{ item }">
         <quote :symbol='item.symbol'/>
         <chart :symbol='item.symbol'/>
+        <indChart :symbol='item.symbol'/>
       </template>
       <template v-slot:item.quote.change="{ item }">
         <span :class='changeClass(item.quote.change[0], 0)'>
@@ -87,6 +88,7 @@ export default
   components:
     quote: require('./quote').default
     chart: require('./chart').default
+    indChart: require('./indChart').default
   props:
     tab: String
   data: ->
