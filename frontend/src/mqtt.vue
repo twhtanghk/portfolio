@@ -29,10 +29,12 @@ client.apply = (list) ->
               item.details.dividend[3] = new Date item.details.dividend[3]
             item.name = msg.name
           when 'yahoo'
+            item.name = msg.quote.name
             item.quote = Object.assign item.quote, msg.quote
             item.details = Object.assign item.details,
               pe: msg.quote.peRatio
               dividend: msg.quote.dividend
+            item.currTotal = item.quantity * item.quote.curr
             item.lastUpdatedAt = new Date msg.quote.updated
             if 'indicators' of msg
               item.indicators = msg.indicators
