@@ -16,8 +16,6 @@ client.apply = (list) ->
       item.currTotal = item.quote.curr * item.quantity
       if 'history' of msg
         item.stopLoss = parseFloat(process.env.STOPLOSS) * Math.max item.price, msg.history['1個月'].high
-      if 'indicators' of msg
-        item.indicators = msg.indicators
     for item in list
       if msg.symbol == item.symbol
         switch msg.src
@@ -30,8 +28,14 @@ client.apply = (list) ->
             if item.details.dividend?[3]?
               item.details.dividend[3] = new Date item.details.dividend[3]
             item.name = msg.name
-          when 'indicators'
-            mergeQuote item, msg
+          when 'yahoo'
+            item.quote = Object.assign item.quote, msg.quote
+            item.details = Object.assign item.details,
+              pe: msg.quote.peRatio
+              dividend: msg.quote.dividend
+            item.lastUpdatedAt = new Date msg.quote.updated
+            if 'indicators' of msg
+              item.indicators = msg.indicators
         item.diffTotal = item.currTotal - item.total
         item.diffPercent = item.diffTotal * 100 / item.total
 
