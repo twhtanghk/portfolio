@@ -37,7 +37,7 @@ client.apply = (list) ->
             if 'indicators' of msg
               item.indicators = msg.indicators
           when 'hkex'
-            item.name = msg.name
+            item = Object.assign item, msg
         item.diffTotal = item.currTotal - item.total
         item.diffPercent = item.diffTotal * 100 / item.total
 
