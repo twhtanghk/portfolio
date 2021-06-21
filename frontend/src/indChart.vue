@@ -1,15 +1,18 @@
 <template>
   <v-btn icon x-small :href='url' target='_blank'>
-    <v-icon>mdi-poll</v-icon>
+    <v-icon>mdi-finance</v-icon>
   </v-btn>
 </template>
 
 <script lang='coffee'>
+{symbol} = require 'analysis'
+
 module.exports =
   props: [
     'symbol'
   ]
   computed:
     url: ->
-      process.env.CHART_URL.replace /#{symbol}/, @symbol.replace(/^0+/, '')
+      code = symbol.yahoo @symbol
+      "/chart/#/stock/#{code}"
 </script>

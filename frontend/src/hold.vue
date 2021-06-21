@@ -11,6 +11,7 @@
       <template v-slot:item.symbol="{ item }">
         <quote :symbol='item.symbol'/>
         <chart :symbol='item.symbol'/>
+        <indChart :symbol='item.symbol'/>
       </template>
       <template v-slot:item.quote.change="{ item }">
         <span :class='changeClass(item.quote.change[0], 0)'>
@@ -35,10 +36,13 @@
         <span>
       </template>
       <template v-slot:item.details.pe="{ item }">
-        {{float(item.details.pe)}}
+        {{float(item.details.pe)}}/{{float(item.details.pb)}}
       </template>
-      <template v-slot:item.details.pb="{ item }">
-        {{float(item.details.pb)}}
+      <template v-slot:item.indicators="{ item }">
+        {{float(item.indicators['c/s'])}}/{{float(item.indicators['s/m'])}}/{{float(item.indicators['m/l'])}}
+      </template>
+      <template v-slot:item.turnover="{ item }">
+        {{float(item.totalShare / item.quote.volume)}}
       </template>
       <template v-slot:item.details.dividend="{ item }">
         <div>
@@ -87,6 +91,7 @@ export default
   components:
     quote: require('./quote').default
     chart: require('./chart').default
+    indChart: require('./indChart').default
   props:
     tab: String
   data: ->
@@ -105,8 +110,9 @@ export default
       { text: 'Price / Avg', value: 'price', sort: @sort }
       { text: 'Current / NAV', value: 'quote.curr', sort: @sort }
       { text: 'StopLoss', value: 'stopLoss' }
-      { text: 'PE', value: 'details.pe' }
-      { text: 'PB', value: 'details.pb' }
+      { text: 'PE/PB', value: 'details.pe', sort: @sort }
+      { text: 'Indicators', value: 'indicators', sort: @sortInd }
+      { text: 'Turnover', value: 'turnover' }
       { 
         text: 'Dividend'
         value: 'details.dividend' 
@@ -136,6 +142,8 @@ export default
       loss: curr < org
     sort: (a, b) ->
       a - b
+    sortInd: (a, b) ->
+      @sort a['c/s'], b['c/s']
     load: ->
       try
         @list.splice 0, @list.length
