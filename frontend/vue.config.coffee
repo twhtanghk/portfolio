@@ -28,6 +28,7 @@ module.exports =
       'CLIENT_ID'
       'AUTH_URL'
       'API_URL'
+      'CHART_URL'
       'MQTTURL'
       'MQTTUSER'
       'MQTTTOPIC'

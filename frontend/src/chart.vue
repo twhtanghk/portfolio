@@ -11,5 +11,5 @@ module.exports =
   ]
   computed:
     url: ->
-      "http://www.aastocks.com/tc/stocks/quote/detailchart.aspx?symbol=0#{@symbol}"
+      process.env.CHART_URL.replace /#{symbol}/, @symbol.replace(/^0+/, '')
 </script>
