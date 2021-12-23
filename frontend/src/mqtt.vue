@@ -1,5 +1,7 @@
 <script lang='coffee'>
 mqtt = require 'stockmqtt'
+{symbol} = require 'analysis'
+{parse} = symbol
 update = null
 client = mqtt()
 client.apply = (list) ->
@@ -17,7 +19,7 @@ client.apply = (list) ->
       if 'history' of msg
         item.stopLoss = parseFloat(process.env.STOPLOSS) * Math.max item.price, msg.history['1個月'].high
     for item in list
-      if msg.symbol == item.symbol
+      if msg.symbol == parse(item.symbol)?.symbol
         switch msg.src
           when 'ib'
             mergeQuote item, msg
