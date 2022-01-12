@@ -1,4 +1,4 @@
-FROM node:13
+FROM node
 
 ENV APP=/usr/src/app
 ADD . $APP
@@ -6,7 +6,7 @@ ADD . $APP
 WORKDIR $APP
 
 RUN (cd backend && yarn install) \
-&& (cd frontend && npm i)
+&& (cd frontend && yarn install)
 
 EXPOSE 1337
 
