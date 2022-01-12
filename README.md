@@ -13,24 +13,24 @@ mqtt stock/#:
       data:
         src: yahoo
         symbol: stock code
-        quote: ...
-        indicators:
-          c/s: number
-          s/m: number
-          m/l: number
-          max: number
-          min: number
-          open: number
-          close: number
-          ema20: number
-          ema60: number
-          ema120: number
-          diff:
-            up: percentage
-            down: percentage
-          date:
-            start: date
-            end: date
+        history:
+          indicators:
+            c/s: number
+            s/m: number
+            m/l: number
+            max: number
+            min: number
+            open: number
+            close: number
+            ema20: number
+            ema60: number
+            ema120: number
+            diff:
+              up: percentage
+              down: percentage
+            date:
+              start: date
+              end: date
   hkex:
     monitor:
       topic: stock
