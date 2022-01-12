@@ -38,8 +38,8 @@ client.apply = (list) ->
             item.currTotal = item.quantity * item.quote.curr
             item.lastUpdatedAt = new Date msg.quote.updated
 ###
-            if 'indicators' of msg
-              item.indicators = msg.indicators
+            if 'history' of msg
+              item.indicators = msg.history.indicators
           when 'hkex'
             item = Object.assign item, msg
         item.diffTotal = item.currTotal - item.total
