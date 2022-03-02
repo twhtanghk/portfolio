@@ -41,8 +41,15 @@
       <template v-slot:item.indicators="{ item }">
         {{float(item.indicators['c/s'])}}/{{float(item.indicators['s/m'])}}/{{float(item.indicators['m/l'])}}
       </template>
-      <template v-slot:item.turnover="{ item }">
-        {{float(item.totalShare / item.quote.volume)}}
+      <template v-slot:item.analysis="{ item }">
+        <div v-if='item.analysis'>
+          {{float(item.analysis.rsi)}}
+        </div>
+        <div v-if='item.analysis'>
+          {{float(item.analysis.ema[0])}}/
+          {{float(item.analysis.ema[1])}}/
+          {{float(item.analysis.ema[2])}}
+        </div>
       </template>
       <template v-slot:item.details.dividend="{ item }">
         <div>
@@ -112,7 +119,12 @@ export default
       { text: 'StopLoss', value: 'stopLoss' }
       { text: 'PE/PB', value: 'details.pe', sort: @sort }
       { text: 'Indicators', value: 'indicators', sort: @sortInd }
-      { text: 'Turnover', value: 'turnover' }
+      { 
+        text: 'RSI/EMA'
+        value: 'analysis' 
+        sort: (a, b) ->
+          a.rsi - b.rsi
+      }
       { 
         text: 'Dividend'
         value: 'details.dividend' 
