@@ -30,9 +30,9 @@ client.apply = (list) ->
             if item.details.dividend?[3]?
               item.details.dividend[3] = new Date item.details.dividend[3]
           when 'yahoo'
-            if 'history' of msg
-              item.analysis = msg.history
-              item.indicators = msg.history.indicators
+            if 'analysis' of msg
+              item.analysis = msg.analysis
+              item.indicators = msg.analysis.indicators
           when 'hkex'
             item = Object.assign item, msg
         item.diffTotal = item.currTotal - item.total
