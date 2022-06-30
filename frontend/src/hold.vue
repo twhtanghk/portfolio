@@ -117,7 +117,7 @@ export default
         text: 'Dividend'
         value: 'details.dividend' 
         sort: (a, b) ->
-          a[1] - b[1]
+          (a[3].getTime() || -Infinity) - (b[3].getTime() || -Infinity)
       }
       { text: 'Total', value: 'total' }
       { text: 'Change', value: 'diffPercent' }
