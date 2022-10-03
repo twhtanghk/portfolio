@@ -26,17 +26,17 @@
         <div>{{float(item.price)}}</div>
         <div>{{float(item.avg)}}</div>
       </template>
-      <template v-slot:item.quote.curr="{ item }">
-        <div>{{item.quote.curr}}</div>
-        <div>{{float(item.details.nav)}}</div>
+      <template v-slot:item.close="{ item }">
+        <div>{{item.close}}</div>
+        <div>{{float(item.nav)}}</div>
       </template>
       <template v-slot:item.stopLoss="{ item }">
         <span :class='changeClass(item.stopLoss, item.price)'>
           {{float(item.stopLoss)}}
         <span>
       </template>
-      <template v-slot:item.details.pe="{ item }">
-        {{float(item.details.pe)}}/{{float(item.details.pb)}}
+      <template v-slot:item.pe="{ item }">
+        {{float(item.pe)}}/{{float(item.pb)}}
       </template>
       <template v-slot:item.indicators="{ item }">
         {{float(item.indicators['c/s'])}}/{{float(item.indicators['s/m'])}}/{{float(item.indicators['m/l'])}}
@@ -108,9 +108,9 @@ export default
       }
       { text: 'Quantity', value: 'quantity' }
       { text: 'Price / Avg', value: 'price', sort: @sort }
-      { text: 'Current / NAV', value: 'quote.curr', sort: @sort }
+      { text: 'Current / NAV', value: 'close', sort: @sort }
       { text: 'StopLoss', value: 'stopLoss' }
-      { text: 'PE/PB', value: 'details.pe', sort: @sort }
+      { text: 'PE/PB', value: 'pe', sort: @sort }
       { text: 'Indicators', value: 'indicators', sort: @sortInd }
       { text: 'Turnover', value: 'turnover' }
       { 

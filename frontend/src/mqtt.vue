@@ -15,11 +15,12 @@ client.apply = (list) ->
       console.error "#{msg}: #{err.toString()}"
     mergeQuote = (item, msg) ->
       item.quote = Object.assign item.quote, msg.quote
-      item.currTotal = item.quote.curr * item.quantity
+      item.currTotal = item.close * item.quantity
       if 'history' of msg
         item.stopLoss = parseFloat(process.env.STOPLOSS) * Math.max item.price, msg.history['1個月'].high
     for item in list
       if msg.symbol == parse(item.symbol)?.symbol
+        Object.assign item, msg
         switch msg.src
           when 'ib'
             mergeQuote item, msg
