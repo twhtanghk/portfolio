@@ -13,10 +13,10 @@
         <chart :symbol='item.symbol'/>
         <indChart :symbol='item.symbol'/>
       </template>
-      <template v-slot:item.quote.change="{ item }">
-        <span :class='changeClass(item.quote.change[0], 0)'>
-          <div>{{item.quote.change[0]}}</div>
-          <div>{{float(item.quote.change[1])}}%</div>
+      <template v-slot:item.changePercent="{ item }">
+        <span :class='changeClass(item.change, 0)'>
+          <div>{{item.change}}</div>
+          <div>{{float(item.changePercent)}}%</div>
         </span>
       </template>
       <template v-slot:item.quantity="{ item }">
@@ -100,12 +100,7 @@ export default
     headers: [
       { text: 'Symbol', value: 'symbol' }
       { text: 'Name', value: 'name' }
-      { 
-        text: 'Daily Change'
-        value: 'quote.change'
-        sort: (a, b) ->
-          a[1] - b[1]
-      }
+      { text: 'Daily Change', value: 'changePercent', sort: @sort }
       { text: 'Quantity', value: 'quantity' }
       { text: 'Price / Avg', value: 'price', sort: @sort }
       { text: 'Current / NAV', value: 'close', sort: @sort }
