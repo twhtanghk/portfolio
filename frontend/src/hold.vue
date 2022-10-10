@@ -44,13 +44,10 @@
       <template v-slot:item.turnover="{ item }">
         {{float(item.totalShare / item.quote.volume)}}
       </template>
-      <template v-slot:item.details.dividend="{ item }">
+      <template v-slot:item.yield_percentage="{ item }">
         <div>
-          {{float(item.details.dividend[0])}}/{{float(item.details.dividend[1])}}%
+          {{float(item.yield_percentage)}}%
         </div>
-        <a :href='item.details.dividend[2]' target='_blank'>
-          {{date(item.details.dividend[3])}}
-        </a>
       </template>
       <template v-slot:item.total="{ item }">
         <div>{{float(item.total)}}</div>
@@ -108,12 +105,7 @@ export default
       { text: 'PE/PB', value: 'pe', sort: @sort }
       { text: 'Indicators', value: 'indicators', sort: @sortInd }
       { text: 'Turnover', value: 'turnover' }
-      { 
-        text: 'Dividend'
-        value: 'details.dividend' 
-        sort: (a, b) ->
-          a[1] - b[1]
-      }
+      { text: 'Dividend', value: 'yield_percentage', sort: @sort }
       { text: 'Total', value: 'total' }
       { text: 'Change', value: 'diffPercent' }
     ]
