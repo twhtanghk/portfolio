@@ -26,6 +26,8 @@ client.apply = (list) ->
             mergeQuote item, msg
           when 'aastocks'
             mergeQuote item, msg
+            item.change = item.close - item.lastClose
+            item.changePercent = item.change * 100 / item.lastClose 
             item.details = Object.assign item.details, msg.details
             item['history'] = msg.history
             if item.details.dividend?[3]?

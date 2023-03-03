@@ -15,7 +15,7 @@
       </template>
       <template v-slot:item.changePercent="{ item }">
         <span :class='changeClass(item.change, 0)'>
-          <div>{{item.change}}</div>
+          <div>{{float(item.change)}}</div>
           <div>{{float(item.changePercent)}}%</div>
         </span>
       </template>
